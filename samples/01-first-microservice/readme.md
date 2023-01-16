@@ -59,7 +59,7 @@ docker rm happy_wilbur
 docker ps -a
 ```
 
-A `Dockerfile` is a text file that contains the instructions used to build and run a Docker image. The following aspects of the image are defined:
+A [`Dockerfile`](./Dockerfile) is a text file that contains the instructions used to build and run a Docker image. The following aspects of the image are defined:
 
 * The base or parent image used to create the new image
 * Commands to update the base OS and install additional software
@@ -196,7 +196,7 @@ docker push jaimestill/mymicroservice
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
 # download install script to inspect (if curious)
-curl -sL https://aka.ms/InstallAzureCLIDeb --output install-azure-cli.bash
+curl -sL https://aka.ms/InstallAzureCLIDeb --output install-azure-cli.sh
 ```
 
 ### Configure
