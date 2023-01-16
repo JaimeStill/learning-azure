@@ -9,13 +9,13 @@
 * [Docker Hub](#docker-hub)
 * [Software](#software)
 * [Images](#images)
+    * [Tags](#tags)
 * [Host OS](#host-os)
 * [Stackable Unification File System](#stackable-unification-file-system)
     * [Base Image](#base-image)
     * [Parent Image](#parent-image)
     * [Base vs. Parent Images](#base-vs-parent-images)
 * [Dockerfile](#dockerfile)
-* [Image Management](#image-management)
 
 ![docker-architecture](https://learn.microsoft.com/en-us/training/modules/intro-to-docker-containers/media/2-docker-architecture.svg)
 
@@ -73,6 +73,19 @@ A portable package that contains software. It's this image that, when run, becom
 
 A container image is immutable. Once you've built an image, the image can't be changed. The only way to change an image is to create a new image. This feature is our guarantee that the image we use in production is the same image used in development and QA.
 
+### Tags
+
+A text string that is used to version an image. When building an image, we name and optionally tag the image using the `-t` command flag, with the convention *{name}:{tag}*. An image is labeled with the `latest` tag if you don't specify a tag (i.e. - *temp-ubuntu:latest*).
+
+A single image can have multiple tags assigned to it. By convention, the most recnet version of an image is assigned the *latest* tag and a tag that describes the image version number. When you release a new versino of an image, you can reassign the latest tag to reference the new image.
+
+Here is another example. Suppose you want to use the .NET Core samples Docker images. Here we have four platform versions that we can choose from:
+
+* `mcr.microsoft.com/dotnet/core/samples:dotnetapp`
+* `mcr.microsoft.com/dotnet/core/samples:aspnetapp`
+* `mcr.microsoft.com/dotnet/core/samples:wcfservice`
+* `mcr.microsoft.com/dotnet/core/samples:wcfclient`
+
 ## Host OS
 [Back to Top](#docker-architecture)
 
@@ -122,7 +135,46 @@ Both image types allow us to create a reusable image. However, base images allow
 ## Dockerfile
 [Back to Top](#docker-architecture)
 
+A text file that contains thet instructions we use to build and run a Docker image. The following aspects of the iamge are defined:
 
+* The base or parent image we use to create the new image
+* Commands to update the base OS and install additional software
+* Build artifacts to include, such as a developed application
+* Services to expose, such as a storage and network configuration
+* Command to run when the container is launched
 
-## Image Management
-[Back to Top](#docker-architecture)
+```Dockerfile
+# Step 1: Specify the parent image for the new image
+FROM ubuntu:18.04
+
+# Step 2: Update OS packages and install additional software
+RUN apt -y update && apt-install -y wget nginx software-properties-common apt-transport-https \
+    && wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
+    && dpkg -i packages-microsoft-prod.deb \
+    && add-apt-repository universe \
+    && apt -y update \
+    && apt install -y dotnet-sdk-3.0
+
+# Step 3: Configure Nginx environment
+CMD service nginx start
+
+# Step 4: Configure Nginx environment
+COPY ./default /etc/nginx/sites-available/default
+
+# Step 5: Configure work directory
+WORKDIR /app
+
+# Step 6: Copy website code to container
+COPY ./website/ .
+
+# Step 7: Configure network requirements
+EXPOSE 80:8080
+
+# Step 8: Define the entry point of the process that runs in the container
+ENTRYPOINT ["dotnet", "website.dll"]
+```
+
+Each of the steps in the Dockerfile create a cached container image (using [`unionfs`](#stackable-unification-file-system)) as we build the final container image. These temporary images are layerd on top of the previous and presented as a single image once all steps complete.
+
+The `ENTRYPOINT` in the file indicates which process will execute once we run a container from an image.
+
