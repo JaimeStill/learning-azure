@@ -7,6 +7,9 @@
         * [Container Management](./notes/docker/03-docker-container-management.md)
     * [Kubernetes](https://kubernetes.io/docs/home/)
         * [Kubernetes Architecture](./notes/kubernetes/01-kubernetes-architecture.md)
+        * [Kubernetes Deployments](./notes/kubernetes/02-kubernetes-deployments.md)
+        * [Explore a Kubernetes Cluster](./notes/kubernetes/03-explore-kubernetes-cluster.md)
+    * [Azure Kubernetes Service (AKS)](./notes/aks.md)
     * [Azure CLI](./notes/azure-cli.md)
     * [Codespaces](./notes/codespaces.md)
     * [eShop Containers Architecture](./notes/eshop-containers-architecture.md)
@@ -32,6 +35,9 @@
 * [Kubernetes](https://kubernetes.io/docs/home/)
 * [Development Containers](https://containers.dev/)
 * [helm](https://helm.sh/)
+* [multipass](https://github.com/canonical/multipass)
+* [microk8s](https://microk8s.io/)
+* [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-us/products/kubernetes-service/)
 
 ### Related Technology Links
 [Back to Top](#learning-containers)
