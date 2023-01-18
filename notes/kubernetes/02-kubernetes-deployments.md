@@ -114,17 +114,45 @@ To support these scenarios, you can configure three types of services to expose 
 
 Service | Description
 --------|------------
+`ClusterIP` | The address assigned to a service that makes the service available to a set of services inside the cluster. For example, communication between the front-end and back-end components of your app.
+`NodePort` | The node port, between 30000 and 32767, that the Kubernetes control plane assigns to the service. An example is 192.158.1.11 on clusters01. You then configure the service with a target port on the pod that you want to expose. For example, configure port 80 on the pod running one of the fornt ends. YOu can now access the front end through a node IP and port address.
+`LoadBalancer` | The load balancer that allows for the distribution of load between nodes running your app, and exposing the pod to public network access. You typically configure load balancers when you use cloud providers. In this case, traffic from the external load balancer is directed to the pods running your app.
+
+In the above scenario, you might decide to expose the website and the RESTful API by using a LoadBalancer and the data processing service by using a ClusterIP.
 
 ### Grouping Pods
 [Back to Top](#kubernetes-deployments)
 
+Managing pods by IP address isn't practical. Pod IP addresses change as controllers re-create them, and you might have any number of pods running.
 
+![service-with-selector](https://learn.microsoft.com/en-us/training/modules/intro-to-kubernetes/media/4-service-with-selector.svg)
+
+A service object enables you to target and manage specific pods in your cluster by using selector labels. You set the selector label in a service definition to match the pod label defined in teh pod's definition file.
+
+Assume that you have many running pods. Only a few of these pods are on the front end, and you want to set a LoadBalancer service that targets only the front-end pods. You can apply your service to expose these pods by referencing the pod label as a selector value in the service's definition file. The service will now group only the pods that match the label. If a pod is removed and re-created, the new pod is automatically added to the service group through its matching label.
 
 ### Storage
 [Back to Top](#kubernetes-deployments)
 
+Kubernetes uses the same storage volume concept that you find when using Docker. Docker volumes are less managed than the Kubernetes volumes because Docker volume lifetimes aren't managed. The Kubernetes volume's lifetime is an explicit lifetime that matches the pod's lifetime. The lifetime match means a volume outlives the containers that run in the pod. However, fi the pod is removed, so is the volume.
 
+Kubernetes provides options to provision persistent storage with the use of *Persistent Volumes*. You can also request specific storage for pods by using *PersistenVolumeClaims*.
+
+Keep both of these options in mind when you're deploying app components that require persisted storage, like message queues and databases.
 
 ## Cloud Integration
 [Back to Top](#kubernetes-deployments)
 
+Kubernetes doesn't dictate the technology stack that you use in your cloud-native app. In a cloud environment such as Azure, you can use several services outside the Kubernetes cluster.
+
+Recall from earlier that Kubernetes doesn't provide any of the following services:
+
+* Middleware
+* Data-processing frameworks
+* Databases
+* Caches
+* Cluster storage systems
+
+In the scenario described in the [Services](#services) section, there are three services that provide middleware functionality - a NoSQL database, an in-memory cache service, and a message queue. You might select MongoDB Atlas for the NoSQL solution, Redis to manage the in-memory cache and RabbitMQ, or Kafka, depending on you rmessage queue needs.
+
+When you're using a cloud environment such as Azure, it's a best practice to use services outside the Kubernetes cluster. This decision can simplify the cluster's configuration and management. For example, you can use *Azure Cache for Redis* for the in-memory caching services, *Azure Service Bus messaging* for the message queue, and *Azure Cosmos DB* for the NoSQL database.
