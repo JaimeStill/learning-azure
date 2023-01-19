@@ -1,3 +1,6 @@
+export RESOURCE_GROUP=rg-contoso-video
+export CLUSTER_NAME=aks-contoso-video
+
 az aks nodepool add \
     --resource-group $RESOURCE_GROUP \
     --cluster-name $CLUSTER_NAME \

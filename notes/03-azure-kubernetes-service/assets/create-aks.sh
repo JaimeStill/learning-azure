@@ -1,3 +1,6 @@
+export RESOURCE_GROUP=rg-contoso-video
+export CLUSTER_NAME=aks-contoso-video
+
 az aks create \
     --resource-group $RESOURCE_GROUP \
     --name $CLUSTER_NAME \
