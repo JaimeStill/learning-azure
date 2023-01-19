@@ -17,9 +17,13 @@
     * [Kubernetes Pod](#kubernetes-pod)
     * [Kubernetes Deployment](#kubernetes-deployment)
         * [Manifest Files](#manifest-files)
+        * [Kubernetes Label](#kubernetes-label)
         * [Manifest File Structure](#manifest-file-structure)
         * [Group Objects in a Deployment](#group-objects-in-a-deployment)
         * [Apply a Deployment File](#apply-a-deployment-file)
+* [Deploy an App to AKS](#deploy-an-app-to-aks)
+    * [Create a Deployment Manifest](#create-a-deployment-manifest)
+    * [Apply the Manifest](#apply-the-manifest)
 
 Before you can deploy an application, you need to create an AKS cluster. The following review covers concepts that allow you to deploy a new AKS cluster successfully.
 
@@ -243,28 +247,94 @@ Kubernetes only allows you to deploy images hosted in a container registry. Crea
 ### Kubernetes Pod
 [Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
 
+Groups containers and applications into a logical structure. These pods hve no intelligence and are composed of one or more application containers. Each one has an IP address, network rules, and exposed ports.
 
+For example, if you wanted to search all workloads releated to the `contoso-website`, you'd query the cluster for pods with the label `app` and the value `contoso-website`.
 
 ### Kubernetes Deployment
 [Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
 
+An evolution of pods, a deployment wraps the pods into an intelligent object that allows them to *scale out*. You can easily duplicate and scale your application to support more load without the need to configure complex networking rules.
 
+Deployments allow users to update applications just by changing the image tag without downtime. When you update a deployment, instead of deleting all apps and creating new ones, the deployment turns off the online apps one by one and replaces them with the newest version. THis aspect means any deployment can update the pods inside it with no visible effect in availability.
 
 #### Manifest Files
 [Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
 
+Allows you to describe your workloads in the YAML format declaratively and simplify Kubernetes object management.
 
+Imagine you have to deploy a workload by hand. You need to think about and manage several aspects. You'd need to create a container, select a specific node, wrap it in a pod, run the pod, monitor execution, and so on.
+
+Manifest files contain all teh information that's needed to create and manage the described workload.
+
+#### Kubernetes Label
+[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+
+Allows you to logically group Kubernetes objects. These labels enable the system to query the cluster for objects that match a label with a specific name.
 
 #### Manifest File Structure
 [Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
 
+Differs depending on the type of resource that you create. However, manifest files share common instructions. These instructions define various aspects, such as the APIs to use and the type of workload to create.
 
+The first two entries in all manifest files have two important keys, `apiVersion` and `kind`. Here's an example of a deployment file:
+
+```yaml
+apiVersion: apps/v1 # Where in teh API it resides
+kind: Deployment #the kind of workload we're creating
+```
+
+Th `apiVersion` key defines the API server endpoint that manages the object you'll deploy.
+
+The `kind` key dfine the workload this deployment will create.
+
+Other common keys for all the files are the `metadata` and `name` keys. All Kubernetes resources *must* have a name. This name goes inside the `metadata` key.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contoso-website # This will be the name of teh deployment.
+```
 
 #### Group Objects in a Deployment
 [Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
 
+Deployments make use of a `label` to find and group pods. You define the label as part of your deployment's manifest file.
 
+Here's an example. Notice the `matchLabels` value defined in the `selector` definition added to the `spec` definition.
+
+```yaml
+# deployment.yaml
+# ...
+spec:
+  selector:
+    matchLabels:
+      app: contoso-website
+# ...
+```
+
+From this point on, all files have different strucures based on what kind of resource you're telling Kubernetes to create.
 
 #### Apply a Deployment File
+[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+
+You deploy a Kubernetes deployment manifest file by using `kubectl`:
+
+```bash
+kubectl apply -f ./deployment.yaml
+```
+
+## Deploy an App to AKS
+[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+
+In this exercise, you'll deploy your company's wbsite as a test app onto AKS. The website is a static website with an underlying technology stack of HTML, CSS, and JavaScript. It doesn't receive as many requests as the other services and provides us with a safe way to test deployment options.
+
+### Create a Deployment Manifest
+[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+
+
+
+### Apply the Manifest
 [Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
 
