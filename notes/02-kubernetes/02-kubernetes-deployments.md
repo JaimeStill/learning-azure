@@ -127,7 +127,7 @@ Managing pods by IP address isn't practical. Pod IP addresses change as controll
 
 ![service-with-selector](https://learn.microsoft.com/en-us/training/modules/intro-to-kubernetes/media/4-service-with-selector.svg)
 
-A service object enables you to target and manage specific pods in your cluster by using selector labels. You set the selector label in a service definition to match the pod label defined in teh pod's definition file.
+A service object enables you to target and manage specific pods in your cluster by using selector labels. You set the selector label in a service definition to match the pod label defined in the pod's definition file.
 
 Assume that you have many running pods. Only a few of these pods are on the front end, and you want to set a LoadBalancer service that targets only the front-end pods. You can apply your service to expose these pods by referencing the pod label as a selector value in the service's definition file. The service will now group only the pods that match the label. If a pod is removed and re-created, the new pod is automatically added to the service group through its matching label.
 

@@ -1,18 +1,6 @@
 # Learning Containers
 
 * [Notes](./notes)
-    * [Docker](https://docs.docker.com/)
-        * [Docker Architecture](./notes/docker/01-docker-architecture.md)
-        * [Image Management](./notes/docker/02-docker-image-management.md)
-        * [Container Management](./notes/docker/03-docker-container-management.md)
-    * [Kubernetes](https://kubernetes.io/docs/home/)
-        * [Kubernetes Architecture](./notes/kubernetes/01-kubernetes-architecture.md)
-        * [Kubernetes Deployments](./notes/kubernetes/02-kubernetes-deployments.md)
-        * [Explore a Kubernetes Cluster](./notes/kubernetes/03-explore-kubernetes-cluster.md)
-    * [Azure Kubernetes Service (AKS)](./notes/aks.md)
-    * [Azure CLI](./notes/azure-cli.md)
-    * [Codespaces](./notes/codespaces.md)
-    * [eShop Containers Architecture](./notes/eshop-containers-architecture.md)
 * [Training](#training)
 * [Links](#links)
     * [Related Technology Links](#related-technology-links)

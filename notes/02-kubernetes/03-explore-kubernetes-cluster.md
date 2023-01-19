@@ -88,7 +88,7 @@ Recall that a Kubernetes cluster exists out of control planes and worker nodes. 
     -----|--------|-------|-----|---------|-------------|-------------|----------|----------------|------------------
     microk8s-vm | Ready | \<none\> | 19m | 1.26.0 | 172.31.217.225 | \<none\> | Ubuntu 22.04.1 LTS | 5.15.79.1-microsoft-standard-WSL2 | containerd://1.6.8
 
-2. Explore teh services running on your cluster. As with nodes, to find information about the services running on the cluster, run the `kubectl get` command.
+2. Explore the services running on your cluster. As with nodes, to find information about the services running on the cluster, run the `kubectl get` command.
 
     ```bash
     sudo kubectl get services -o wide
@@ -136,7 +136,7 @@ Even though the use of `kubectl` is handy, using manifest files is a best practi
     sudo kubectl create deployment nginx --image=nginx
     ```
 
-2. To fetch teh information about your deployment, run:
+2. To fetch the information about your deployment, run:
 
     ```bash
     sudo kubectl get deployments
@@ -185,7 +185,7 @@ Even though the use of `kubectl` is handy, using manifest files is a best practi
 ### Scale a Web Server Deployed on a Cluster
 [Back to Top](#explore-the-functionality-of-a-kubernetes-cluster)
 
-To scale number of replicas in your deployment, run the `kubectl scale` command. Specify the number of replicas you need and the name of teh deployment.
+To scale number of replicas in your deployment, run the `kubectl scale` command. Specify the number of replicas you need and the name of the deployment.
 
 1. To scale the total of NGINX pods to three, run:
 
@@ -214,7 +214,7 @@ You would need to apply several additional configurations to the cluster to effe
 
 ## Uninstall Microk8s
 
-1. To remove the add-ons from teh cluster, run:
+1. To remove the add-ons from the cluster, run:
 
     ```bash
     sudo microk8s.disable dashboard dns registry
