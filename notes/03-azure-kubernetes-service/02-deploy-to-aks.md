@@ -24,6 +24,13 @@
 * [Deploy an App to AKS](#deploy-an-app-to-aks)
     * [Create a Deployment Manifest](#create-a-deployment-manifest)
     * [Apply the Manifest](#apply-the-manifest)
+* [Networks in Kubernetes](#networks-in-kubernetes)
+    * [Kubernetes Services](#kubernetes-services)
+    * [Kubernetes Service Types](#kubernetes-service-types)
+    * [Ingress](#ingress)
+    * [Using Ingress Controllers](#using-ingress-controllers)
+    * [Ingress Rules](#ingress-rules)
+    * [Annotation](#annotation)
 
 Before you can deploy an application, you need to create an AKS cluster. The following review covers concepts that allow you to deploy a new AKS cluster successfully.
 
@@ -333,8 +340,317 @@ In this exercise, you'll deploy your company's wbsite as a test app onto AKS. Th
 ### Create a Deployment Manifest
 [Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
 
+You create a deployment manifest file to deploy your application. The manifest file allows you to define what type of resource you want to deploy and all the details associated with the workload.
 
+Kubernetes groups containers into logical structures called pods, which have no intelligence. Deployments add the missing intelligence to create your application. Let's create a deployment file.
+
+1. Login to the Azure CLI
+
+    ```bash
+    az login
+    ```
+
+2. Create a manifest file ofr the Kubernetes deployment called [`deployment.yaml`](./assets/deployment.yaml):
+
+    ```bash
+    touch ./deployment.yaml
+    ```
+
+3. Open the file in VS code:
+
+    ```bash
+    code ./deployment.yaml
+    ```
+
+4. Add the following code section of YAML:
+
+    ```yaml
+    apiVersion: apps/v1 # the API resource where this workload resides
+    kind: Deployment # the kind of workload we're creating
+    metadata:
+        name: contoso-website # this will be the name of the deployment
+    ```
+
+    In this code, you added the first two keys to tell Kubernetes the `apiVersion` and `kind` of manifest you're creating. The `name` is the name of the deployment. You'll use it to identify and query the deployment information when you use `kubectl`.
+
+5. A deployment wraps a pod. You make use of a template definition to define the pod information within the manifest file. The template is placed in the manifest file under the deployment specification section.
+
+    Update the [`deployment.yaml`](./assets/deployment.yaml) file to match the following:
+
+    ```yaml
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: contoso-website
+    spec:
+      template: # this is the teamplte of the pod inside the deployment
+        metadata: # metadata for the pod
+          labels:
+            app: contoso-website
+    ```
+
+    Pods don't have given names when they're created inside deployments. The pod's name will be the deployment's name iwht a random ID added to the end.
+
+    Notice the use of the `labels` key. You add the `labels` key to allow deployments to find and group pods.
+
+6. A pod wraps one or more containers. All pods have a specification section that allows you to define the containers inside that pod.
+
+    Update the [`deployment.yaml`](./assets/deployment.yaml) file to match the following:
+
+    ```yaml
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: contoso-website
+    spec:
+      template:
+        metadata:
+          labels:
+            app: contoso-website
+        spec:
+          containers: # here we define all containers
+            - name: contoso-website
+    ```
+
+    the `containers` key is an array of container specifications because a pod can have one or more containers. The specification defines an `image`, a `name`, `resources`, `ports`, and other important information about the container.
+
+    All running pods will follow the name `contoso-website-<UUID>`, where UUID is a generated ID to identify all resources uniquely.
+
+7. It's a good practice to define a minimum and maximum amount of resources that the app is allowed to use from the cluster. You use the `resources` key to specify this information.
+
+    Update the `deployment.yaml` file to match the following:
+
+    ```yaml
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: contoso-website
+    spec:
+      template:
+        metadata:
+          labels:
+            app: contoso-website
+        spec:
+          containers:
+            - image: mcr.microsoft.com/mslearn/samples/contoso-website
+              name: contoso-website
+              resources:
+                requests: # minimum amount of resources requested
+                  cpu: 100m
+                  memory: 128Mi
+                limits: # maximum amount of resources requested
+                  cpu: 250m
+                  memory: 256Mi
+    ```
+
+    Notice how the resoruce section allows you to specify the minimum resource amount as a request and the maximum resource amount as a limit.
+
+8. The last step is to define the ports this container will expose externally through the `ports` key. The `ports` key is an array of objects, which means that a container in a pod can expose multiple ports with multiple names.
+
+    Update the [`deployment.yaml`](./assets/deployment.yaml) file to match the following:
+
+    ```yaml
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: contoso-website
+    spec:
+      template:
+        metadata:
+          labels:
+            app: contoso-website
+        spec:
+          nodeSelector:
+            kubernetes.io/os: linux
+          containers:
+            - image: mcr.microsoft.com/mslearn/samples/contoso-website
+              name: contoso-website
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 128Mi
+                limits:
+                  cpu: 250m
+                  memory: 256Mi
+              ports:
+                - containerPort: 80 # this container exposes port 80
+                  name: http # we named the port "http" so we can refer to it later
+    ```
+
+    > In an AKS cluster which has multiple node pools (Linux and Windows), the deployment manifest file listed above defines a `nodeSelector` to tell your AKS cluster to run the sample application's pod on a node that can run Linux containers. Linux nodes can't run Windows containers and vice versa.
+
+    Notice how you name the port by using the `name` key. Naming ports allows you to change the exposed port without changing files that reference that port.
+
+9. Finally, add a selector section to define the workloads the deployment will manage. The `selector` key is placed inside the deployment specification section on the manifest file. Use the `matchLabels` key to list the labels fo rall the pods managed by the deployment.
+
+    Update the [`deployment.yaml`](./assets/deployment.yaml) file to match the following:
+
+    ```yaml
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: contoso-website
+    spec:
+      selector: # define the wrapping strategy
+        matchLabels: # match all pods with the defined labels
+          app: contoso-website # labels follow the `name: value` template
+      template:
+        metadata:
+          labels:
+            app: contoso-website
+        spec:
+          nodeSelector:
+            kubernetes.io/os: linux
+          containers:
+            - image: mcr.microsoft.com/mslearn/samples/contoso-website
+              name: contoso-website
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 128Mi
+                limits:
+                  cpu: 250m
+                  memory: 256Mi
+              ports:
+                - containerPort: 80
+                  name: http
+    ```
 
 ### Apply the Manifest
 [Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
 
+1. In the terminal, run the `kubectl apply` command to submit the deployment manifest to your cluster:
+
+    ```bash
+    kubectl apply -f ./deployment.yaml
+    ```
+
+    The command should output a result similar to the following example:
+
+    ```
+    deployment.apps/contoso-website created
+    ```
+
+2. Run the `kubectl get deploy` command to check if the deployment was successful:
+
+    ```bash
+    kubectl get deploy contoso-website
+    ```
+
+    The command should output a table similar to the following example:
+
+    NAME | READY | UP-TO-DATE | AVAILABLE | AGE
+    -----|-------|------------|-----------|----
+    contoso-website | 0/1 | 1 | 0 | 16s
+
+3. Run the `kubectl get pods` command to check if the pod is running.
+
+    The command should output a table similar to the following example:
+
+    NAME | READY | STATUS | RESTARTS | AGE
+    -----|-------|--------|----------|----
+    contoso-website-{uuid} | 1/1 | Running | 0 | 2m5s
+
+## Networks in Kubernetes
+[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+
+An AKS cluster blocks all inbound traffic from the internet to the cluster to assure network security. Deployed workloads in Kubernetes are, by default, only accessible from inside the cluster. To expose applications to the outside world, you need to open specific ports and forward them to your services.
+
+The configuration of ports and port forwarding in Kubernetes is different from what you might be used to in other environments. On a virtual machine (VM), you'll configure the OS-level firewall to allow inbound traffic to port 443 and allow HTTPS web traffic. In Kubernetes, the control plane manages network configuration based on declarative instructions you provide.
+
+The network configuration for containers is temporary. A container's configuration and the data in it isn't persistent between executions. After you delete a container, all information is gone unless it's configured to use a volume. The same applies to the container's network configuration and any IP addresses assigned to it.
+
+A deployment is a logical grouping of pods. It isn't considered a physical workload and isn't assigned an IP address. But each pod is automatically assigned an IP address. When the pod is destroyed, the IP address is lost. This behavior makes a manual network configuration strategy complex.
+
+Kubernetes has two network availability abstractions that allow you to expose any app without worrying about the underlying infrastructure or assigned pod IP addresses.
+
+These abstractions are the *services* and *ingresses*. They're both responsible for allowing and redirecting the traffic from external sources to the cluster.
+
+### Kubernetes Services
+[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+
+![service-diagram](https://learn.microsoft.com/en-us/training/modules/aks-deploy-container-app/media/6-1-service-diagram.png)
+
+A Kubernetes service is a workload that abstracts the IP address for networked workloads. A Kubernetes service acts as a load balancer and redirects traffic to the specified ports by using port-forwarding rules.
+
+You define a service in the same way as a deployment, by using a YAML manifest file. The service uses the same `selector` key as deployments to select and group resources with matching labels into one single IP.
+
+A Kubernetes service needs four pieces of information to route traffic:
+
+Information | Description
+------------|------------
+Target resource | The target resource is defined by the `selector` key in the service manifest file. This value selects all resources with a given label onto a single IP address.
+Service port | This port is the inbound port for your application. All the requests come to this port from where the service forwards the requests to the resource.
+Network protocol | This value identifies the network protocol for which teh service will forward network data.
+Resource port | This value identifies the port on the target resource on which incoming requests are received. This port is defined by the `targetPort` key in the service manfiest file.
+
+### Kubernetes Service Types
+[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+
+Service cna be of several types. Each type changes the behavior of the applications selected by the service.
+
+* **ClusterIP:** This value exposes the applications internally only. This option allows the service to act as a port-forwarder and makes the service available within the cluster. This value is the default when omitted.
+* **NodePort:** This value exposes the service externally. It assigns each node a static port that responds to that service. When accessed through `nodeIp:port`, the node automatically redirects the request to an internal service of the `ClusterIP` type. This service then forwards the request to the applications.
+* **LoadBalancer:** This value exposes the service externally by using Azure's load-balancing solution. When created, this resource spins up an Azure Load Balancer resource within your Azure subscription. Also, this type automatically creates a `NodePort` service to which the load balancer's traffic is redirected and a `ClusterIP` service to forward it internally.
+* **ExternalName:** This value maps the service by using a DNS resolution through a CNAME record. You use this service type to direct traffic to services that exist outside the Kubernetes cluster.
+
+### Ingress
+[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+
+![ingress-diagram](https://learn.microsoft.com/en-us/training/modules/aks-deploy-container-app/media/6-2-ingress-diagram.png)
+
+Ingress exposes routes for HTTP and HTTPS traffic from outside a cluster to services inside the cluster. You define ingress routes by using *ingress rules*. A Kubernetes cluster rejects all incoming traffic wihtout these routes defined.
+
+Assume you want to allow clients to access your website through the `http://contoso.com` web address. For a client to access your app inside the cluster, the cluster must respond to the website's CNAME and route the requests to the relevant pod.
+
+#### Using Ingress Controllers
+[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+
+Kubernetes uses ingress controllers to manage the configuration of ingresses in a cluster and provides several features. An ingress controller:
+
+* Acts as a reverse proxy to allow external URLs
+* Might act as a load balancer
+* Terminates SSL/TLS requests
+* Offers name-based virtual hosting
+
+In AKS, the ingress controller links to a *DNS Zone* resource in your Azure subscription. The DNS Zone is automatically created as part of the cluster creation porcess on your behalf. The link makes it possible for teh cluster to automatically generate a zone record that points the DNS name to the exposed application's IP address and port.
+
+In AKS, the HTTP application routing add-on allows you to create ingress controllers.
+
+#### Ingress Rules
+[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+
+Ingress rules define where traffic is coming from and where to direct it within a cluster. You define ingress rules in an ingress deployment manifest file.
+
+These rules are defined in the `rules` key of the manifest file. Each rule is a set of values that describes the rule.
+
+For example, assume you want to allow clients to access your website by using the URL `http://example.com/site`. You want to route traffic to your video rendering service website. Here's an example of the defined ingress rule to allow this behavior:
+
+```yaml
+rules:
+  - host: example.com # a FQDN that describes the host where that rule should be applied
+    http:
+      paths: # a list of paths and handlers for the host
+        - path: /site # which path is this rule referring to
+          backend: # how the ingress will handle the requests
+            serviceName: contoso-website # which service the request will be forwarded to
+            servicePort: 80 # which port in that service
+```
+
+This example defines a rule that allows all traffic using the address `example.com` and path `/site` to enter the cluster. This traffic is then routed to the `contoso-website` service on port `80`.
+
+#### Annotation
+[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+
+An annotation allows you to attach non-identifying metadata, such as ingress configurations, for workloads. You can think of the annotation as an internal label that defines specific configurations for resources. For example, you might want to use a specific ingress controller that supports name rewriting or payload limiting.
+
+Here's an example of the annotation in a manifest file that specifies the use of the HTTP application routing add-on.
+
+```yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: contoso-website
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing # use the HTTP application routing add-on
+```
