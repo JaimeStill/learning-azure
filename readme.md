@@ -27,6 +27,11 @@
     * [HTTP application routing](https://learn.microsoft.com/en-us/azure/aks/http-application-routing)
     * [AKS Ingress Controllers](https://learn.microsoft.com/en-us/azure/aks/ingress-tls?tabs=azure-cli)
     * [AKS Production Baseline](https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/containers/aks/baseline-aks)
+* [Government Cloud Services in Compliance Scope](https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope)
+* [Ansible](https://www.ansible.com/overview/how-ansible-works)
+* [Terraform](https://www.terraform.io/use-cases/manage-kubernetes)
+* [Vault](https://www.vaultproject.io/)
+* [Portainer](https://www.portainer.io/)
 
 
 ### Related Technology Links
