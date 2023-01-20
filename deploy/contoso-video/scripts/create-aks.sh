@@ -1,5 +1,5 @@
-export RESOURCE_GROUP=rg-contoso-video
-export CLUSTER_NAME=aks-contoso-video
+RESOURCE_GROUP=rg-contoso-video
+CLUSTER_NAME=aks-contoso-video
 
 az aks create \
     --resource-group $RESOURCE_GROUP \
@@ -9,4 +9,4 @@ az aks create \
     --generate-ssh-keys \
     --node-vm-size Standard_B2s \
     --network-plugin azure \
-    --windows-admin-username localadmin # pwd: P@$$Word1234!@#$
+    --windows-admin-username localadmin
