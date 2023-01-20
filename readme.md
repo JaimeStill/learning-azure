@@ -19,17 +19,23 @@
 [Back to Top](#learning-containers)
 
 * [Docker](https://docs.docker.com/)
-* [Docker Hub](https://hub.docker.com)
+    * [Docker Hub](https://hub.docker.com)
 * [Kubernetes](https://kubernetes.io/docs/home/)
-* [Development Containers](https://containers.dev/)
-* [helm](https://helm.sh/)
-* [multipass](https://github.com/canonical/multipass)
-* [microk8s](https://microk8s.io/)
+    * [Ingress Controllers](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/)
+    * [Service Types](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types)
 * [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-us/products/kubernetes-service/)
+    * [HTTP application routing](https://learn.microsoft.com/en-us/azure/aks/http-application-routing)
+    * [AKS Ingress Controllers](https://learn.microsoft.com/en-us/azure/aks/ingress-tls?tabs=azure-cli)
+    * [AKS Production Baseline](https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/containers/aks/baseline-aks)
+
 
 ### Related Technology Links
 [Back to Top](#learning-containers)
 
+* [Development Containers](https://containers.dev/)
+* [helm](https://helm.sh/)
+* [multipass](https://github.com/canonical/multipass)
+* [microk8s](https://microk8s.io/)
 * [IdentityServer 4](https://identityserver4.readthedocs.io/en/latest/)
 * [Azure Active Directory](https://azure.microsoft.com/en-us/products/active-directory/)
 * [RabbitMQ](https://www.rabbitmq.com/)

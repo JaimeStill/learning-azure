@@ -905,3 +905,24 @@ To expose the website to the world via DNS, you must create an ingress controlle
 ## Clean Up Resources
 [Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
 
+1. Open the [Azure Portal](https://portal.azure.com).
+
+2. Select **Resource groups** on the left.
+
+3. Find the **rg-contoso-video** resource group, or the resource group name you used, and select it.
+
+4. On the **Overview** tab of the resource group, select **Delete resource group**.
+
+5. Enter the name of the resource group to config. Select **Delete** to delete all of the resources you created in this module.
+
+6. Finally, run the `kubectl config delete-context` command to remove the deleted clusters context. Here's an example of the complete command> Remember to replace the name of the cluster with your cluster's name:
+
+    ```bash
+    kubectl config delete-context aks-contoso-video
+    ```
+
+    If successful, the command returns the following:
+
+    ```
+    deleted context aks-contoso-video from /home/user/.kube/config
+    ```

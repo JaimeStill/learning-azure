@@ -11,6 +11,7 @@
 * [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-us/products/kubernetes-service/)
     * [AKS](./03-azure-kubernetes-service/01-aks.md)
     * [Deploy to AKS](./03-azure-kubernetes-service/02-deploy-to-aks.md)
+    * [Optimize Compute Costs](./03-azure-kubernetes-service/03-optimize-compute-costs.md)
 * [Azure CLI](./azure-cli.md)
 * [Codespaces](./codespaces.md)
 * [eShop Containers Architecture](./eshop-containers-architecture.md)
