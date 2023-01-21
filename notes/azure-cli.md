@@ -2,6 +2,8 @@
 
 > [Install on Linux](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux?view=azure-cli-latest&pivots=apt)
 
+* [Use Azure CLI Effectively](https://learn.microsoft.com/en-us/cli/azure/use-cli-effectively?tabs=bash%2Cbash2)
+
 **Download script file to view**
 
 ```bash

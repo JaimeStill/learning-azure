@@ -157,7 +157,7 @@ Despite the advantages, HTTP application routing is better suited to more basic 
 
 4. Run the `az aks create` command to creae an AKS cluster.
 
-    **Saved as [create-aks.sh](./assets/create-aks.sh)**
+    **Saved as [create-aks.sh](./assets/deploy-to-aks/create-aks.sh)**
 
     ```bash
     az aks create \
@@ -177,7 +177,7 @@ Despite the advantages, HTTP application routing is better suited to more basic 
 
 5. Run the `az aks nodepool add` command to add another node pool that uses the Windows operating system.
 
-    **Saved as [add-aks-nodepool.sh](./assets/add-aks-nodepool.sh)**
+    **Saved as [add-aks-nodepool.sh](./assets/deploy-to-aks/add-aks-nodepool.sh)**
 
     ```bash
     az aks nodepool add \
@@ -205,7 +205,7 @@ Despite the advantages, HTTP application routing is better suited to more basic 
     cp /mnt/c/Users/{user}/.kube/config ~/.kube/config
     ```
 
-    This command will add an entry to your `~/.kube/config` file (see [kube.config](./assets/kube.config) for a sanitized example), which holds all the information to access your clusters. Kubectl enables you to manage multiple clusters from a single command-line interface.
+    This command will add an entry to your `~/.kube/config` file (see [kube.config](./assets/deploy-to-aks/kube.config) for a sanitized example), which holds all the information to access your clusters. Kubectl enables you to manage multiple clusters from a single command-line interface.
 
 2. Run the `kubectl get nodes` command to check that you can connect to your cluster, and confirm its configuration.
 
@@ -249,7 +249,7 @@ Here, you'll explore how to create workloads in your AKS cluster.
 
 ![container-registry-diagram](https://learn.microsoft.com/en-us/training/modules/aks-deploy-container-app/media/4-1-container-registry-diagram.png)
 
-Allows you to store container images safely in teh cloud for later deployment. You can think of the container registry as an archive that stores multiple versions of your container image. Each stored image has a tag assigned for identification.
+Allows you to store container images safely in the cloud for later deployment. You can think of the container registry as an archive that stores multiple versions of your container image. Each stored image has a tag assigned for identification.
 
 For example, you might have the image `contoso-website:latest`, which would be a different version of the image with the tag `contoso-website:v1.0.0`.
 
@@ -278,7 +278,7 @@ Allows you to describe your workloads in the YAML format declaratively and simpl
 
 Imagine you have to deploy a workload by hand. You need to think about and manage several aspects. You'd need to create a container, select a specific node, wrap it in a pod, run the pod, monitor execution, and so on.
 
-Manifest files contain all teh information that's needed to create and manage the described workload.
+Manifest files contain all the information that's needed to create and manage the described workload.
 
 #### Kubernetes Label
 [Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
@@ -293,7 +293,7 @@ Differs depending on the type of resource that you create. However, manifest fil
 The first two entries in all manifest files have two important keys, `apiVersion` and `kind`. Here's an example of a deployment file:
 
 ```yaml
-apiVersion: apps/v1 # Where in teh API it resides
+apiVersion: apps/v1 # Where in the API it resides
 kind: Deployment #the kind of workload we're creating
 ```
 
@@ -307,7 +307,7 @@ Other common keys for all the files are the `metadata` and `name` keys. All Kube
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: contoso-website # This will be the name of teh deployment.
+  name: contoso-website # This will be the name of the deployment.
 ```
 
 #### Group Objects in a Deployment
@@ -356,7 +356,7 @@ Kubernetes groups containers into logical structures called pods, which have no 
     az login
     ```
 
-2. Create a manifest file ofr the Kubernetes deployment called [`deployment.yaml`](./assets/deployment.yaml):
+2. Create a manifest file ofr the Kubernetes deployment called [`deployment.yaml`](./assets/deploy-to-aks/deployment.yaml):
 
     ```bash
     touch ./deployment.yaml
@@ -381,7 +381,7 @@ Kubernetes groups containers into logical structures called pods, which have no 
 
 5. A deployment wraps a pod. You make use of a template definition to define the pod information within the manifest file. The template is placed in the manifest file under the deployment specification section.
 
-    Update the [`deployment.yaml`](./assets/deployment.yaml) file to match the following:
+    Update the [`deployment.yaml`](./assets/deploy-to-aks/deployment.yaml) file to match the following:
 
     ```yaml
     apiVersion: apps/v1
@@ -401,7 +401,7 @@ Kubernetes groups containers into logical structures called pods, which have no 
 
 6. A pod wraps one or more containers. All pods have a specification section that allows you to define the containers inside that pod.
 
-    Update the [`deployment.yaml`](./assets/deployment.yaml) file to match the following:
+    Update the [`deployment.yaml`](./assets/deploy-to-aks/deployment.yaml) file to match the following:
 
     ```yaml
     apiVersion: apps/v1
@@ -453,7 +453,7 @@ Kubernetes groups containers into logical structures called pods, which have no 
 
 8. The last step is to define the ports this container will expose externally through the `ports` key. The `ports` key is an array of objects, which means that a container in a pod can expose multiple ports with multiple names.
 
-    Update the [`deployment.yaml`](./assets/deployment.yaml) file to match the following:
+    Update the [`deployment.yaml`](./assets/deploy-to-aks/deployment.yaml) file to match the following:
 
     ```yaml
     apiVersion: apps/v1
@@ -489,7 +489,7 @@ Kubernetes groups containers into logical structures called pods, which have no 
 
 9. Finally, add a selector section to define the workloads the deployment will manage. The `selector` key is placed inside the deployment specification section on the manifest file. Use the `matchLabels` key to list the labels fo rall the pods managed by the deployment.
 
-    Update the [`deployment.yaml`](./assets/deployment.yaml) file to match the following:
+    Update the [`deployment.yaml`](./assets/deploy-to-aks/deployment.yaml) file to match the following:
 
     ```yaml
     apiVersion: apps/v1
@@ -619,7 +619,7 @@ Kubernetes uses ingress controllers to manage the configuration of ingresses in 
 * Terminates SSL/TLS requests
 * Offers name-based virtual hosting
 
-In AKS, the ingress controller links to a *DNS Zone* resource in your Azure subscription. The DNS Zone is automatically created as part of the cluster creation porcess on your behalf. The link makes it possible for teh cluster to automatically generate a zone record that points the DNS name to the exposed application's IP address and port.
+In AKS, the ingress controller links to a *DNS Zone* resource in your Azure subscription. The DNS Zone is automatically created as part of the cluster creation porcess on your behalf. The link makes it possible for the cluster to automatically generate a zone record that points the DNS name to the exposed application's IP address and port.
 
 In AKS, the HTTP application routing add-on allows you to create ingress controllers.
 
@@ -675,13 +675,13 @@ You successfully deployed the video rendering service website to your cluster. B
     az login --use-device-code
     ```
 
-2. Create a manifest file for the Kubernetes service called [`service.yaml`](./assets/service.yaml):
+2. Create a manifest file for the Kubernetes service called [`service.yaml`](./assets/deploy-to-aks/service.yaml):
 
     ```bash
     touch service.yaml
     ```
 
-3. Open [`service.yaml`](./assets/service.yaml) in VS Code and add the following:
+3. Open [`service.yaml`](./assets/deploy-to-aks/service.yaml) in VS Code and add the following:
 
     ```bash
     code ./service.yaml
@@ -698,7 +698,7 @@ You successfully deployed the video rendering service website to your cluster. B
 
 4. You define how the service will behave in the specification section of the manifest file. The first behavior you need to add is the type of service. Set the `type` key to `clusterIP`.
 
-    Update the [`service.yaml`](./assets/service.yaml) file to match the following:
+    Update the [`service.yaml`](./assets/deploy-to-aks/service.yaml) file to match the following:
 
     ```yaml
     apiVersion: v1
@@ -711,7 +711,7 @@ You successfully deployed the video rendering service website to your cluster. B
 
 5. You define the pods the service will group and provide coverage by adding a `selector` section to the manifest file. Add the `selector`, and set the `app` key value to the `contoso-website` label of your pods as specified in your earlier deployment's manifest file.
 
-    Update the [`service.yaml`](./assets/service.yaml) file to match the following:
+    Update the [`service.yaml`](./assets/deploy-to-aks/service.yaml) file to match the following:
 
     ```yaml
     apiVersion: v1
@@ -778,13 +778,13 @@ You successfully deployed the video rendering service website to your cluster. B
 
 To expose the website to the world via DNS, you must create an ingress controller.
 
-1. Create a manifest file for the Kubernetes service called [`ingress.yaml`](./assets/ingress.yaml):
+1. Create a manifest file for the Kubernetes service called [`ingress.yaml`](./assets/deploy-to-aks/ingress.yaml):
 
     ```bash
     touch ingress.yaml
     ```
 
-2. Open the [`ingress.yaml`](./assets/ingress.yaml) file in code and add the following section:
+2. Open the [`ingress.yaml`](./assets/deploy-to-aks/ingress.yaml) file in code and add the following section:
 
     ```bash
     code ./ingress.yaml
@@ -801,7 +801,7 @@ To expose the website to the world via DNS, you must create an ingress controlle
 
 3. Create an `annotations` key inside the `metadata` section of the manifest file called to use the HTTP application routing add-on for this ingress. Set the key to `kubernetes.io/ingress.class` and a value of `addon-http-application-routing`.
 
-    Update the [`ingress.yaml`](./assets/ingress.yaml) file to match the following:
+    Update the [`ingress.yaml`](./assets/deploy-to-aks/ingress.yaml) file to match the following:
 
     ```yaml
     apiVersion: networking.k8s.io/v1
@@ -816,7 +816,7 @@ To expose the website to the world via DNS, you must create an ingress controlle
 
     Run the `az network dns zone list` command to query the Azure DNS zone list:
 
-    **Saved as [`query-dns-zone.sh`](./assets/query-dns-zone.sh)**
+    **Saved as [`query-dns-zone.sh`](./assets/deploy-to-aks/query-dns-zone.sh)**
 
     ```bash
     az aks show \
@@ -826,7 +826,7 @@ To expose the website to the world via DNS, you must create an ingress controlle
       --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName
     ```
 
-5. Copy the output and update the [`ingress.yaml`](./assets/ingress.yaml) file to match the following:
+5. Copy the output and update the [`ingress.yaml`](./assets/deploy-to-aks/ingress.yaml) file to match the following:
 
     > Replace the `<zone-name>` placeholder value with the `ZoneName` value copied from above.
 
@@ -844,7 +844,7 @@ To expose the website to the world via DNS, you must create an ingress controlle
 
 6. Add the back-end configuration to your ingress rule. Create a key named `http` and allow the `http` protocol to pass through. Then, define the `paths` key that will allow you to filter whether this rule applies to all paths or the website or only some of them.
 
-    Update the [`ingress.yaml`](./assets/ingress.yaml) file to match the following:
+    Update the [`ingress.yaml`](./assets/deploy-to-aks/ingress.yaml) file to match the following:
 
     ```yaml
     apiVersion: networking.k8s.io/v1
