@@ -1,16 +1,17 @@
-# Kubenetes
+# Kubernetes
 
 ## Architecture
+[Back to Top](#kubernetes)
 
 Kubernetes is used as the orchestration and cluster software to deploy apps and respond to changes in compute resource needs.
 
 ### Orchestrator
-[Back to Top](#kubernetes-architecture)
+[Back to Top](#kubernetes)
 
 A system that deploys and manages apps.
 
 ### Cluster
-[Back to Top](#kubernetes-architecture)
+[Back to Top](#kubernetes)
 
 A cluster is a set of computers that you configure to work together and view as a single system. They computers configured in the cluster will typically do the same kinds of tasks (i.e. - host websites, APIs, or run compute-intensive work).
 
@@ -23,7 +24,7 @@ A cluster uses centralized software that's responsible for scheduling and contro
 A Kubernetes cluster contains at least one main plane and one or more nodes. Both the control planes and node instances can be physical devices, virtual machines, or instances in the cloud. The default host OS in Kubernetes is Linux, with default support for Linux-based workloads.
 
 ### Control Plane
-[Back to Top](#kubernetes-architecture)
+[Back to Top](#kubernetes)
 
 The control plane in a cluster runs a collection of services that manage the orchestration functionality in Kubernetes. In production and cloud deployments, the preferred configuration is a high-availability deployment with three to five replicated control planes.
 
@@ -39,26 +40,26 @@ The following services make up the control plane for a Kubernetes cluster:
 
 
 #### API Server
-[Back to Top](#kubernetes-architecture)
+[Back to Top](#kubernetes)
 
 The front end to the control plane in your Kubernetes cluster. All communication between the components in Kubernetes is done through this API.
 
 The `kubectl` command-line app enables you to run commands against the Kubernetes cluster's API server. The component that provides this API is called `kube-apiserver`, and you can deploy several instances of this component to support scaling in your cluster.
 
 #### Backing Store
-[Back to Top](#kubernetes-architecture)
+[Back to Top](#kubernetes)
 
 A persistence store that your Kubernetes cluster uses to save the complete configuration of a Kubernetes cluster. Kubernetes uses a high-availability, distributed, and reliable key-value store called `etcd`. This key-value store stores the current state and the desired state of all objects within your cluster.
 
 In a production Kubernetes cluster, the official Kubernetes guidance is to have three to five replicated instances of the `etcd` database for high availability.
 
 #### Scheduler
-[Back to Top](#kubernetes-architecture)
+[Back to Top](#kubernetes)
 
 The component that's responsible for the assignment of workloads across all nodes. The scheduler monitors the cluster for newly created containers, and assigns them to nodes.
 
 #### Controller Manager
-[Back to Top](#kubernetes-architecture)
+[Back to Top](#kubernetes)
 
 Launches and monitors the controllers configured for a cluster through the API server.
 
@@ -69,12 +70,12 @@ The controller communicates with the API server to determine the state of the ob
 Assume that one of three containers running in your cluster stops responding and has died. In this case, a controller decides whether you need to launch new containers to ensure that your apps are always available. If the desired state is to run three containers at a time, then a new container is scheduled to run.
 
 #### Cloud Controller Manager
-[Back to Top](#kubernetes-architecture)
+[Back to Top](#kubernetes)
 
 Integrates with the underlying cloud technologies in your cluster when the cluster is running in a cloud environment. These services can be load balancers, queues, and storage, for example.
 
 ### Node
-[Back to Top](#kubernetes-architecture)
+[Back to Top](#kubernetes)
 
 A node in a cluster is where your compute workloads run. Each node communicates with the control plane via the API server to inform it about state changes on the node.
 
@@ -84,28 +85,28 @@ The following services run on the Kubernetes node:
 * Container runtime
 
 #### kubelet
-[Back to Top](#kubernetes-architecture)
+[Back to Top](#kubernetes)
 
 The agent that runs on each node in the cluster, and monitors work requests from the API server. It makes sure the requested unit of work is running and healthy.
 
 The kubelet monitors the nodes and makes sure that the containers scheduled on each node run as expected. The kubelet manages only containers created by Kubernetes. It isn't responsible for rescheduling work to run on other nodes if the current node can't run the work.
 
 #### kube-proxy
-[Back to Top](#kubernetes-architecture)
+[Back to Top](#kubernetes)
 
 Responsible for local cluster networking, and runs on each node. It ensures that each node has a unique IP address. It also implements rules to handle routing and load balancing of traffic by using iptables and IPVS.
 
 This proxy doesn't provide DNS services by itself. A DNS cluster add-on based on CoreDNS is recommended and installed by default.
 
 #### Container Runtime
-[Back to Top](#kubernetes-architecture)
+[Back to Top](#kubernetes)
 
 The underlying software that runs containers on a Kubernetes cluster. The runtime is responsible for fetching, starting, and stopping container images. Kubernetes supports several container runtims, including but not limited to Docker, containerd, rkt, CRI-O, and frakti. The support for many container runtime types is based on the Container Runtime Interface (CRI). The CIR is a plug-in design that enables a kubelet to communicate with the available container runtime.
 
 The default container runtim in AKS is Docker. However, AKS now supports creation of clusters and node pools with containerd, an industry-standard container runtime, in preview. Containerd will become the default container runtime for AKS when containerd support becomes generally available.
 
 ### kubectl
-[Back to Top](#kubernetes-architecture)
+[Back to Top](#kubernetes)
 
 A command-line tool to manage your cluster. You use `kubectl` to send commands to the cluster's control plane, or fetch informatino about all Kubernetes objects via the API server.
 
@@ -117,7 +118,7 @@ A command-line tool to manage your cluster. You use `kubectl` to send commands t
 You can configure `kubectl` to connect to multiple clusters by providing the correct context as part of the command-line syntax.
 
 ### Pods
-[Back to Top](#kubernetes-architecture)
+[Back to Top](#kubernetes)
 
 Represents a single instance of an app running in Kubernetes. THe workloads that you run on Kubernetes are containerized apps. Unlike in a Docker environment, you can't run containers directly on Kubernetes. You package the container into a Kubernetes object called a pod. A pod is the smallest object that you can create in Kubernetes.
 
@@ -138,7 +139,7 @@ Assume that your site uses a database. The website is packaged in the main conta
 Because you can potentially create many pods that are running on many nodes, it can be hard to identify them. You recognize and group pods by using string labels that you specify when you define a pod.
 
 #### Lifecycle
-[Back to Top](#kubernetes-architecture)
+[Back to Top](#kubernetes)
 
 Kubernetes pods have a distinct lifecycle that affects the way you deploy, run, and update pods. You start by submitting the pod YAML manifest to the cluster. After the manifest file is submitted and persisted to the cluster, it defines the desired state of the pod. The scheduler schedules the pod to a healthy node that has enough resources to run the pod.
 
@@ -157,6 +158,7 @@ Pods are kept on a cluster until a controller, the control plane, or a user expl
 The cluster doesn't save the pod's state or dynamically assigned configuration. For example, it doesn't save the pod's ID or IP address. This aspect affects how you deploy pods and how you design your apps. For example, you can't rely on preassigned IP addresses for your pods.
 
 #### Container States
+[Back to Top](#kubernetes)
 
 Keep in mind that the phases are a summary of where the pod is in its lifecycle. When you inspect a pod, the cluster uses three states to track your containers inside the pod:
 
@@ -169,7 +171,7 @@ State | Description
 ## Deployments
 
 ### Pod Deployment Options
-[Back to Top](#kubernetes-deployments)
+[Back to Top](#kubernetes)
 
 There are several options to manage the deployment of pods in a Kubernetes cluster when you're using `kubectl`. The options are:
 
@@ -181,26 +183,26 @@ There are several options to manage the deployment of pods in a Kubernetes clust
 You can use any of these four Kubernetes object type definitions to deploy a pod or pods. These files make use of YAML to describe the intended state of the pod or pods that will be deployed.
 
 #### Pod Template
-[Back to Top](#kubernetes-deployments)
+[Back to Top](#kubernetes)
 
 Enables you to define the configuration of the pod you want to deploy. The template contains information, such as the name of the image, and which container registry to use to fetch the images. The template may also include runtime configuration information, such as ports to use. Templates are defined by using YAML in the same way s when you create Docker files.
 
 You can use templates to deploy pods manually. However, a manually-deployed pod isn't relaunched after it fails, is deleted, or is terminated. To manage the lifecycle of a pod, you need to create a higher-level Kubernetes object.
 
 #### Replication Controller
-[Back to Top](#kubernetes-deployments)
+[Back to Top](#kubernetes)
 
 Uses pod templates and defines a specified number of pods that must run. The controller helps you run multiple instances of the same pod, and ensures pods are always running on one or more nodes in the cluster. The controller replaces running pods in this way with new pods if they fail, are deleted, or are terminated.
 
 #### Replica Set
-[Back to Top](#kubernetes-deployments)
+[Back to Top](#kubernetes)
 
 Replaces the replication controller as the preferred way to dpeloy replicas. A replica set includes the same functionality as a replication controller. However, it has an extra configuration option to include a selector value.
 
 A selector enables the replica set to identify all the pods running underneath it. Using this feature, you can manage pods labeled with the same value as the selector value, but not created with the replicated set.
 
 #### Deployment
-[Back to Top](#kubernetes-deployments)
+[Back to Top](#kubernetes)
 
 Creates a management object one level higher than a replica set, and enables you to deploy and manage updates for pods in a cluster.
 
@@ -223,12 +225,12 @@ Deployments make use of YAML-based definition files, and make it easy to manage 
 `kubectl` has convenient syntax to create a deployment automatically when you're using the `kubectl run` command to deploy a pod. This command creates a deployment with the required replica set and pods. However, the command doesn't create a definition file. A best practice is to manage all deployments with deployment definition files, and track changes by using a version control system.
 
 ### Deployment Considerations
-[Back to Top](#kubernetes-deployments)
+[Back to Top](#kubernetes)
 
 Kubernetes has specific requirements about how you configure networking and storage for a cluster. How you configure these two aspects affects your decisions about how to expose your apps on the cluster network and store data.
 
 #### Networking
-[Back to Top](#kubernetes-deployments)
+[Back to Top](#kubernetes)
 
 Assume you have a cluster with one control plane and two nodes. When you add nodes to Kubernetes, an IP address is automatically assigned to each node from an internal private network range. For example, assume that your local network range is 192.168.1.0/24
 
@@ -253,7 +255,7 @@ Kubernetes offers several networking options that you can install to configure n
 Cloud providers also provide their own networking solutions. For example, Azure Kubernetes Service (AKS) supports the Azure Virtual Network container network interface (CNI), Kubenet, Flannet, Cilium, and Antrea.
 
 #### Services
-[Back to Top](#kubernetes-deployments)
+[Back to Top](#kubernetes)
 
 A Kubernetes service is a Kubernetes object that provides stable networking for pods. A Kubernetes service enables communication between nodes, pods, and users of your app, both internal and external, to the cluster.
 
@@ -277,7 +279,7 @@ Service | Description
 In the above scenario, you might decide to expose the website and the RESTful API by using a LoadBalancer and the data processing service by using a ClusterIP.
 
 #### Grouping Pods
-[Back to Top](#kubernetes-deployments)
+[Back to Top](#kubernetes)
 
 Managing pods by IP address isn't practical. Pod IP addresses change as controllers re-create them, and you might have any number of pods running.
 
@@ -288,7 +290,7 @@ A service object enables you to target and manage specific pods in your cluster 
 Assume that you have many running pods. Only a few of these pods are on the front end, and you want to set a LoadBalancer service that targets only the front-end pods. You can apply your service to expose these pods by referencing the pod label as a selector value in the service's definition file. The service will now group only the pods that match the label. If a pod is removed and re-created, the new pod is automatically added to the service group through its matching label.
 
 #### Storage
-[Back to Top](#kubernetes-deployments)
+[Back to Top](#kubernetes)
 
 Kubernetes uses the same storage volume concept that you find when using Docker. Docker volumes are less managed than the Kubernetes volumes because Docker volume lifetimes aren't managed. The Kubernetes volume's lifetime is an explicit lifetime that matches the pod's lifetime. The lifetime match means a volume outlives the containers that run in the pod. However, fi the pod is removed, so is the volume.
 
@@ -297,7 +299,7 @@ Kubernetes provides options to provision persistent storage with the use of *Per
 Keep both of these options in mind when you're deploying app components that require persisted storage, like message queues and databases.
 
 ### Cloud Integration
-[Back to Top](#kubernetes-deployments)
+[Back to Top](#kubernetes)
 
 Kubernetes doesn't dictate the technology stack that you use in your cloud-native app. In a cloud environment such as Azure, you can use several services outside the Kubernetes cluster.
 
@@ -314,6 +316,7 @@ In the scenario described in the [Services](#services) section, there are three 
 When you're using a cloud environment such as Azure, it's a best practice to use services outside the Kubernetes cluster. This decision can simplify the cluster's configuration and management. For example, you can use *Azure Cache for Redis* for the in-memory caching services, *Azure Service Bus messaging* for the message queue, and *Azure Cosmos DB* for the NoSQL database.
 
 ## Cheatsheet
+[Back to Top](#kubernetes)
 
 ```bash
 # create a deployment file

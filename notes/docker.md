@@ -3,11 +3,12 @@
 ![docker-architecture](https://learn.microsoft.com/en-us/training/modules/intro-to-docker-containers/media/2-docker-architecture.svg)
 
 ## Architecture
+[Back to Top](#docker)
 
 Docker is a containerization platform used to develop, ship, and run containers. Docker doesn't use a hypervisor, and you can run Docker on your desktop or laptop if you're developing and testing applications. The desktop version of Docker supports Linux, Windows, and MacOS. For production systems, Docker is available for server environments, including many variants of Linux and Microsoft Windows Server 2016 and above. Many clouds, including Azure, support Docker.
 
 ### Container
-[Back to Top](#docker-architecture)
+[Back to Top](#docker)
 
 A loosely isolated environment that allows us to build and run software packages. These software packages include the code and all dependencies to run applications quickly and reliably on any computing environmente. We call these packages *container images*.
 
@@ -18,47 +19,48 @@ The container image becomes the unit we use to distribute our applications.
 Software containerization is an OS virtualization method that is used to deploy and run containers without using a virtual machine (VM). Containers can run on physical hardware, in the cloud, VMs, and across multiple OSs.
 
 ### Docker Engine
-[Back to Top](#docker-architecture)
+[Back to Top](#docker)
 
 Consists of several componnets configured as a client-server implementation where the client and server run simultaneously on the same host. The client communicates with the server using a REST API, which enables the client to also communicate with a remote server instance.
 
 ### Docker Client
-[Back to Top](#docker-architecture)
+[Back to Top](#docker)
 
 A command-line application named `docker` that provides us wiht a command line interface (CLI) to interact with the Docker server. The `docker` command uses the Docker REST API to send instructions to either a local or remote server and functions as the primary interface we use to manage our containers.
 
 ### Docker Server
-[Back to Top](#docker-architecture)
+[Back to Top](#docker)
 
 A daemon named `dockerd`. The `dockerd` daemon responds to requests from the client via the Docker REST API and can interact with other daemons. The Docker server is also responsible for tracking the lifecycle of our containers.
 
 ### Docker Objects
-[Back to Top](#docker-architecture)
+[Back to Top](#docker)
 
 There are several objects that you'll create and configure to support your container deployments. These include networks, storage volumes, plugins, and other service objects.
 
 ### Docker Hub
-[Back to Top](#docker-architecture)
+[Back to Top](#docker)
 
 A Software as a Service Docker container registry. Docker registries are repositories that we use to store and distribute the container images we create. Docker Hub is the default public registry Docker uses for image management.
 
 You can create and use a private Docker registry or use one of the many cloud provider options available. For example, you can use Azure Container Registry to store container images to use in several Azure cotnainer-enabled services.
 
 ### Software
-[Back to Top](#docker-architecture)
+[Back to Top](#docker)
 
 The software packaged into a container isn't limited to the applications our developers build. When we talk about software, we refer to application code, system packages, binaries, libraries, configuration files, and the operating system running in the container.
 
 For example, assume we're developing an order tracking portal that our company's various outlets will use. We need to look at the complete stack of software that will run our web application. The application we're building is a .NET Core MVC app, and we plan to deploy the application using Nginx as a reverse proxy server on Ubuntu Linux. All of these software components form part of the container image.
 
 ### Images
-[Back to Top](#docker-architecture)
+[Back to Top](#docker)
 
 A portable package that contains software. It's this image that, when run, becomes our container. The container is the in-memory instance of an image.
 
 A container image is immutable. Once you've built an image, the image can't be changed. The only way to change an image is to create a new image. This feature is our guarantee that the image we use in production is the same image used in development and QA.
 
 ### Tags
+[Back to Top](#docker)
 
 A text string that is used to version an image. When building an image, we name and optionally tag the image using the `-t` command flag, with the convention *{name}:{tag}*. An image is labeled with the `latest` tag if you don't specify a tag (i.e. - *temp-ubuntu:latest*).
 
@@ -72,14 +74,14 @@ Here is another example. Suppose you want to use the .NET Core samples Docker im
 * `mcr.microsoft.com/dotnet/core/samples:wcfclient`
 
 ### Host OS
-[Back to Top](#docker-architecture)
+[Back to Top](#docker)
 
 ![host-os](https://learn.microsoft.com/en-us/training/modules/intro-to-docker-containers/media/3-container-scratch-host-os.svg)
 
 The host OS is the OS on which the Docker engine runs. Docker containers running on Linux share the host OS kernel and don't require a container OS as long as the binary can access the OS kernel directly.
 
 ### Container OS
-[Back to Top](#docker-architecture)
+[Back to Top](#docker)
 
 ![container-os](https://learn.microsoft.com/en-us/training/modules/intro-to-docker-containers/media/3-container-ubuntu-host-os.svg)
 
@@ -90,7 +92,7 @@ The container OS is the OS that is part of the packaged image. We have the flexi
 The container OS is isolated from the host OS and is the environment in which we deploy and run our application. Combined with the image's immutability, this isolation means the environment for our application running in development is the same as in production.
 
 ### Stackable Unification File System
-[Back to Top](#docker-architecture)
+[Back to Top](#docker)
 
 ![unionfs-diagram](https://learn.microsoft.com/en-us/training/modules/intro-to-docker-containers/media/3-unionfs-diagram.svg)
 
@@ -101,24 +103,24 @@ Assume we're building an image for our web application from earlier. We'll layer
 A final writeable layer is created once the container is run from the image. This layer however, does not persist when the container is destroyed.
 
 ### Base Image
-[Back to Top](#docker-architecture)
+[Back to Top](#docker)
 
 An image that uses the Docker `scratch` image. The `scratch` image is an empty container that doesn't create a filesystem layer. This image assumes that the application you're going to run can directly use the host OS kernel.
 
 ### Parent Image
-[Back to Top](#docker-architecture)
+[Back to Top](#docker)
 
 A container image from which you create images.
 
 Instead of creating an image from `scratch` and then installing Ubuntu, we'll rather use an image already based on Ubuntu. We can even use an image that already has Nginx installed. A parent image usually includes a container OS.
 
 ### Base vs. Parent Images
-[Back to Top](#docker-architecture)
+[Back to Top](#docker)
 
 Both image types allow us to create a reusable image. However, base images allow us more control over the contents of the final image. Recall that an image is immutable, you can only add to an image and not subtract.
 
 ### Dockerfile
-[Back to Top](#docker-architecture)
+[Back to Top](#docker)
 
 A text file that contains thet instructions we use to build and run a Docker image. The following aspects of the iamge are defined:
 
@@ -166,13 +168,14 @@ The `ENTRYPOINT` in the file indicates which process will execute once we run a 
 Another [Dockerfile](./assets/docker/Dockerfile) example.
 
 ## Image Management
+[Back to Top](#docker)
 
 Docker images are large files that get stored on your PC and we need tools to manage these files.
 
 The Docker CLI allows us to manage images by building, listing, removing, and running them. We manage Docker images by using the `docker` client. The client doesn't execute the commands directly and sends all queries to the `dockerd` daemon.
 
 ### Build
-[Back to Top](#image-management)
+[Back to Top](#docker)
 
 Use the `docker build` command to build Docker images. Assume the [Dockerfile](#dockerfile) definition linked to build an image.
 
@@ -215,7 +218,7 @@ Successfully tagged temp-ubuntu:latest
 Notice that a number of commands are executed to install software and manage configuration. For example, in step 2, we run the `apt -y update` and `apt install -y` commands to update the OS. These commands execute in a running container that is created for that step. Once the command has run, the intermediate container is removed. The underlying cached image is kept on the build host and not automatically deleted. This optimization ensures that later builds reuse these images to speed up build times.
 
 ### List
-[Back to Top](#image-management)
+[Back to Top](#docker)
 
 Docker automatically configures a local image registry on your machine. You can view the images in this registry with:
 
@@ -234,7 +237,7 @@ Notice how the image is listed with its *Name*, *Tag*, and an *Image ID*. Recall
 The image ID is a useful way to identify and manage images where the name or tag of an image might be ambiguous.
 
 ### Remove
-[Back to Top](#image-management)
+[Back to Top](#docker)
 
 You can remove an image from the local docker registry with the `docker rmi` command. Specify the *name* or *ID* of the image to remove:
 
@@ -263,7 +266,7 @@ To send a kill signal if you need to terminate the container, use the kill comma
 Lastly, to remove containers that are in a stopped state, use the remove command. After removing a container, all data stored in the container gets destroyed.
 
 ### View
-[Back to Top](#container-management)
+[Back to Top](#docker)
 
 To list running containers, run the `docker ps` command. To see all containers in all states, pass the `-a` argument.
 
@@ -284,7 +287,7 @@ There are three items to review in the above output:
     * Names enable you to run multiple container instances of the same image. Container names are unique, which means if you specify a name, that name can't be reused to create a new container. The only way to reuse a specific name is to remove the previous container.
 
 ### Run
-[Back to Top](#container-management)
+[Back to Top](#docker)
 
 To start a container, run the `docker run` command. You only need to specify the image to run with its name or ID to launch the container from the image. A container launched in this manner provides an interactive experience.
 
@@ -299,7 +302,7 @@ The command, in this case, only returns the ID of the new container.
 After an image is specified to run, Docker finds the image, loads container from the image, and executes the command specified as the entry point. It's at this point that the container is available for management.
 
 ### Pause
-[Back to Top](#container-management)
+[Back to Top](#docker)
 
 To pause a container:
 
@@ -316,7 +319,7 @@ docker unpause happy_wilbur
 ```
 
 ### Restart
-[Back to Top](#container-management)
+[Back to Top](#docker)
 
 To restart containers:
 
@@ -327,7 +330,7 @@ docker restart happy_wilbur
 The container receives a stop command, followed by a start command. If the container doesn't respond to the stop command, thena  kill signal is sent.
 
 ### Stop
-[Back to Top](#container-management)
+[Back to Top](#docker)
 
 To stop a running container:
 
@@ -338,7 +341,7 @@ docker stop happy_wilbur
 The stop command sends a termination signal to the container and the process running in the container.
 
 ### Remove
-[Back to Top](#container-management)
+[Back to Top](#docker)
 
 To remove a container:
 
@@ -349,7 +352,7 @@ docker rm happy_wilbur
 After you remove the container, all data in the container is destroyed. It's essential to always consider containers as temporary when thinking about storing data.
 
 ### Storage Configuration
-[Back to Top](#container-management)
+[Back to Top](#docker)
 
 Always consider containers as temporary when the app in a container needs to store data.
 
@@ -367,7 +370,7 @@ Even though this approach works, it has several drawbacks:
 Containers can make use of two options to persist data. The first option is to make use of *volumes*, and the second is *bind mounts*.
 
 ### Volume
-[Back to Top](#container-management)
+[Back to Top](#docker)
 
 A volume is stored on the host filesystem at a specific folder location. Choose a folder where you know the data isn't going to be modified by non-Docker processes.
 
@@ -378,7 +381,7 @@ Volumes are stored within directories on the host filesystem. Docker will mount 
 Multiple containers can simultaneously use the same volumes. Volumes also don't get removed automatically when a container stops using a volume.
 
 ### Bind Mount
-[Back to Top](#container-management)
+[Back to Top](#docker)
 
 A bind mount is conceptually the same as a volume, however, instead of using a specific folder, you can mount any file or folder on the host. You're also expecting the host can change the contents of these mounts. Just like volumes, the bind mount is created if you mount it, and doesn't yet exist on the host.
 
@@ -387,7 +390,7 @@ Bind mounts have limited functionality compared to volumes, and even though they
 Volumes are considered the preferred data storage strategy to use with containers.
 
 ### Network Configuration
-[Back to Top](#container-management)
+[Back to Top](#docker)
 
 The default docker network configuration allows for the isolation of containers on the Docker host. This feature enables you to build and configure apps that can communicate securely with each other.
 
@@ -400,7 +403,7 @@ Docker provides three pre-configured network configurations:
 You choose which of these network configurations to apply to your container depending on its network requirements.
 
 ### Bridge Network
-[Back to Top](#container-management)
+[Back to Top](#docker)
 
 The default configuration applied to containers when launched without specifying any other network configuration. This network is an internal, private network used by the container and isolates the container network from the Docker host network.
 
@@ -419,7 +422,7 @@ The container resource is accessible to clients browsing to port 80. You'll have
 Any client browsing to the Docker host IP and port 8080 can access the container resource.
 
 ### Host Network
-[Back to Top](#container-management)
+[Back to Top](#docker)
 
 Enables you to run the container on the host network directly. This configuration effectively removes the isolation between the host and the container at a network level.
 
@@ -428,18 +431,19 @@ Let's assume you decide to change the networking configuration to the host netwo
 Keep in mind that the container can use only ports not already used by the host.
 
 ### None Network
-[Back to Top](#container-management)
+[Back to Top](#docker)
 
 To disable networking for containers, use the none network option.
 
 ### OS Considerations
-[Back to Top](#container-management)
+[Back to Top](#docker)
 
 There are differences between desktop operating systems for the Docker network configuration options. For example, the *Docker0* network interface isnt' available on macOS when using the bridge network, and using the host network configuration isn't supported for both Windows and macOS desktops.
 
 These differences might affect the way your developers configure their workflow to manage container development.
 
 ## Cheatsheet
+[Back to Top](#docker)
 
 ```bash
 # view images in the local Docker image registry
@@ -486,6 +490,7 @@ docker push {username}/{image}
 ```
 
 ### Docker Compose
+[Back to Top](#docker)
 
 ```bash
 # build from docker-compose.yml
@@ -496,6 +501,7 @@ docker-compose up
 ```
 
 ### Docker Hub
+[Back to Top](#docker)
 
 ```bash
 docker login

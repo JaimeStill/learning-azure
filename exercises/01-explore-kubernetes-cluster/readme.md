@@ -1,15 +1,5 @@
 # Explore the Functionality of a Kubernetes Cluster
 
-* [Microk8s](#microk8s)
-* [Install Microk8s with WSL](#install-microk8s-with-wsl)
-* [Prepare the Cluster](#prepare-the-cluster)
-* [Explore the Kubernetes Cluster](#explore-the-kubernetes-cluster)
-    * [Display Cluster Node Information](#display-cluster-node-information)
-    * [Install a Web Server on a Cluster](#install-a-web-server-on-a-cluster)
-    * [Test the Website Installation](#test-the-website-installation)
-    * [Scale a Web Server Deployed on a Cluster](#scale-a-web-server-deployed-on-a-cluster)
-* [Uninstall Microk8s](#uninstall-microk8s)
-
 Your goal in this exercise is to explore a Kubernetes installation with a single-node cluster. You're going to configure a *Microk8s* environment that's easy to setup and teardwon. Then, you'll deploy an NGINX website and scale it out to multiple instances. Finally, you'll go through the steps to delete the running pods and clean up the cluster.
 
 Keep in mind that there are other options, such a MiniKube and Kubernetes support in Docker, to do the same.

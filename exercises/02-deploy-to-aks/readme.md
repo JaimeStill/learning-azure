@@ -1,7 +1,7 @@
 # Deploy to AKS
 
 ## Create an AKS Cluster
-[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+[Back to Top](#deploy-to-aks)
 
 1. Sign in to Azure in WSL
 
@@ -62,7 +62,7 @@
     The `--os-type` parameter is used to specify the operating system of the node pool. If not specified, the command will use Linux as the operating system for the nodes.
 
 ### Link with `kubectl`
-[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+[Back to Top](#deploy-to-aks)
 
 1. Link your Kubernetes cluster with `kubectl` by running the following command:
 
@@ -91,7 +91,7 @@
     aksuspool000001 | Ready | agent | 30m | v1.24.6
 
 ## Create a Deployment Manifest
-[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+[Back to Top](#deploy-to-aks)
 
 You create a deployment manifest file to deploy your application. The manifest file allows you to define what type of resource you want to deploy and all the details associated with the workload.
 
@@ -270,7 +270,7 @@ Kubernetes groups containers into logical structures called pods, which have no 
     ```
 
 ## Apply the Manifest
-[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+[Back to Top](#deploy-to-aks)
 
 1. In the terminal, run the `kubectl apply` command to submit the deployment manifest to your cluster:
 
@@ -305,7 +305,7 @@ Kubernetes groups containers into logical structures called pods, which have no 
     contoso-website-{uuid} | 1/1 | Running | 0 | 2m5s
 
 ## Create the Service Manifest
-[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+[Back to Top](#deploy-to-aks)
 
 1. Login to the Azure CLI
 
@@ -383,7 +383,7 @@ Kubernetes groups containers into logical structures called pods, which have no 
     ```
 
 ## Deploy the Service
-[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+[Back to Top](#deploy-to-aks)
 
 1. Run the `kubectl apply` command to submit thet service manifest to your cluster:
 
@@ -412,7 +412,7 @@ Kubernetes groups containers into logical structures called pods, which have no 
     With the external IP set to `<none>`, the application isn't available to external clients. The service is only available to the internal cluster.
 
 ## Create an Ingress Manifest
-[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+[Back to Top](#deploy-to-aks)
 
 To expose the website to the world via DNS, you must create an ingress controller.
 
@@ -506,7 +506,7 @@ To expose the website to the world via DNS, you must create an ingress controlle
     ```
 
 ## Deploy the Ingress
-[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+[Back to Top](#deploy-to-aks)
 
 1. Run the `kubectl apply` command to submit the ingress manifest to your cluster:
 
@@ -541,7 +541,7 @@ To expose the website to the world via DNS, you must create an ingress controlle
     ![contoso-website](https://learn.microsoft.com/en-us/training/modules/aks-deploy-container-app/media/7-website-success.png)
 
 ## Clean Up Resources
-[Back to Top](#deploy-a-containerized-application-on-azure-kubernetes-service)
+[Back to Top](#deploy-to-aks)
 
 1. Open the [Azure Portal](https://portal.azure.com).
 
