@@ -657,3 +657,132 @@ Property | Description
 `key` | The label key that the selector applies to. The key is `kubernetes.azure.com/scalesetpriority`.
 `operator` | Represents a key's relationship to a set of values. Valid operators are `In`, `NotIn`, `Exists`, `DoesNotExist`, `Gt` and `Lt`.
 `values` | Represents the value part of the node label key-value pair that is specified on the node. On a spot node pool with a key-value pair of `kubernetes.azure.com/scaelsetpriority:spot`, the value is spot.
+
+## Configure AKS Resource Quota Policies by using Azure Policy for Kubernetes
+[Back to Top](#azure-kubernetes-service)
+
+Azure Policy helps you to enforce standards and assess compliance at scale for your cloud environment.  It's good practice for companies to implement business rules to define how employees are to use company software, hardeware, and other resources in the organization. These business rules are often described by using policies that are put in place, enforced, and reviewwed as defined within each policy. A policy helps an organizatino meet governance and legal requiremetns, implement best practices, and establish organizational conventions.
+
+Azure Kubernetes Service (AKS) enables you to orchestrate your cloud-native applications efficiently. You realize that you need to enforce business rules to manage how the teams use AKS to ensure a cost-effective approach to creating workloads. You can use Azure Policy to apply this same idea to how your Azure-based cloud resources are used.
+
+### Kubernetes Admission Controller
+[Back to Top](#azure-kubernetes-service)
+
+[Reference](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)  
+
+A Kubernetes plug-in that intercepts authenticated and authorized requests to the Kubernetes API before the requested Kubernetes object's persistence. You can think of an admission controller as software that governs and enforces how the cluster is used and designed. It limits requests to create, delete, and modify Kubernetes objects.
+
+### Admission Controller Webhook
+[Back to Top](#azure-kubernetes-service)
+
+[Reference](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
+
+An HTTP callback function that receives admission requests and then acts on these requests. Admission controllers exist either as a compiled-in admission plug-in or as a deployed extension that runs as a webhook that you configure at runtime.
+
+Admission webhooks are available in two kinds: either a *validating webhook* or a *mutating webhook*. A mutating webhook is invoked first and can change and apply defaults on the objects sent to the API server. A validation webhook validates object values and can reject requests.
+
+### Open Policy Agent (OPA)
+[Back to Top](#azure-kubernetes-service)
+
+[Reference](https://www.openpolicyagent.org/docs/latest/)
+
+An open-source, general-purpose policy engine that gives you a high-level declarative language to author policies. These policies enable you to define rules that oversee how your system should behave.
+
+### OPA Gatekeeper
+[Back to Top](#azure-kubernetes-service)
+
+[Reference](https://www.openpolicyagent.org/docs/latest/kubernetes-introduction/#what-is-opa-gatekeeper)
+
+An open-source, validating, Kubernetes admission-controller webhook that enforces Custom Resource Definition (CRD)-based policies by using the Open Policy Agent.
+
+The goal of the OPA Gatekeeper is to define organization-wide policies. For example, you can require that:
+
+* The maximum resource limits, such as CPU and memory limits, are enforced for all configured pods.
+* The deployment of images is allowed only from approved repositories.
+* Labels for all namespaces in a cluster specify a point of contact for each namespace.
+* Cluster services have globally unique selectors.
+
+The current veresion of the OPA Gatekeeper (version 3) is suppoerted by Azure Kubernetes Service.
+
+### Azure Policy for AKS
+[Back to Top](#azure-kubernetes-service)
+
+Azure Policy extends OPA Gatekeeper version 3 and integrates with AKS through built-in policies. These policies apply at-scale enforcements and safeguards on your cluster in a centralized and consistent manner.
+
+To setup resoure limits, you can apply resource quotas at the namespace level and monitor resource usage to adjust policy quotas. Use this strategy to reserve and limit resources across the development team.
+
+### Assign a Built-In Policy Definition
+[Back to Top](#azure-kubernetes-service)
+
+You manage your Azure environment's policies by using the Azure policy compliance dashboard. The dashboard enables you to drill down to a per-resoruce, per-policy level of detail. It helps you bring your resources to compliance by using bulk remediation for existing resources and automatic remediation for new resources.
+
+For each policy, the following overview information is listed:
+
+Item | Description
+-----|------------
+Name | The name of the policy. For example, **[Preview]: Ensure container CPU and memory resoruce limits do not exceed the specified limits in Kubernetes cluster.**.
+Scope | The subscription resource group to which this policy applies. For example, "Visual Studio Enterprise/rg-akscostsaving".
+Compliance state | The status of assigned policies. The value can be **Compliant**, **Conflicted**, **Not Started**, or **Not Registered**.
+Resource compliance | The percentage of resources that comply with the policy. This calculation takes into account compliant, non-compliant, and conflicting resources.
+Non-compliant resources | The number of unique resources that violate one or more policy rules.
+Non-compliant policies | The number of non-compliant policies.
+
+From here, you drill down into the per-resource and per-policy details and events triggered.
+
+## Assigning Policies
+[Back to Top](#azure-kubernetes-service)
+
+Azure Policies are assigned. To assign a policy, you select the **Assignments** option under the **Authoring** section in the Azure Policy navigatino panel.
+
+You assign Azure policies in one of two ways: as a group of policies, called an *initiative*, or as a single policy.
+
+## Initiative Assignment
+[Back to Top](#azure-kubernetes-service)
+
+A collection of Azure policy definitions grouped together to satisfy a specific goal or purpose.
+
+## Policy Assignment
+[Back to Top](#azure-kubernetes-service)
+
+A policy assignment assigns a single policy, such as **Do not allow privileged containers in Kubernetes cluster**.
+
+## How to Assign a Policy
+[Back to Top](#azure-kubernetes-service)
+
+Each policy is defined by using a series of configuration steps. The amount of information you capture depends on the type of policy you select.
+
+### Basic Policy Information
+[Back to Top](#azure-kubernetes-service)
+
+The first step requires you to select and enter basic information that defines the new policy. This table shows each item you'll configure:
+
+Item | Description
+-----|------------
+Scope | The scope determines what resource, or group of resources, the policy assignment is to be enforced on. This value is based on a subscription or a management group. You can exclude resources from your selection at one level lower than the scope level.
+Policy Definition | The policy you want to apply. You can choose from several built-in poilcy options.
+Assignment Name | The name by which to identify the assigned policy.
+Description | A free-text description that describes the policy.
+Policy enforcement | This option switches between **Enabled** and **Disabled**. If the option is **Disabled**, the policy isn't applied and requests aren't denied with non-compliance.
+Assigned by | A free-text value that defaults to the restered user. This value can be changed.
+
+### Policy Parameters
+
+Policies require you to configure the business rules that apply to each specific policy. Not all policies have the same business rules, and that's why each policy has different parameters.
+
+All policies have an **Effect** setting. This setting enables or disables the execution of the policy. As with parameters, policies can have different **Effect** options.
+
+This table lists all the effects currently supported in policy definitions:
+
+Effect | Description
+-------|------------
+Append | Adds more fields to the requested resource.
+Audit | Creates a warning event in the activity log.
+AuditIfNotExists | Enables auditing of resources related to the resource that matches the condition.
+Deny | Prevents a resource request that doesn't match defined standards through a policy definition, and fails the request.
+DeployIfNotExists | executes a template deployment when the condition is met.
+Disabled | Useful for testing situations or for when the policy definition has parameterized the effect, and you want to disable a single assignment.
+Modify | Adds, updates, or removes tags on a resource during creation or update.
+
+### Policy Remediation
+
+When you assign policies, it's possible that resources already exist and are impacted by the new policy. By default, only newly created resources are affected by the new policy. You can update existing resources by using a remediation task after you assign the policy. Remediation tasks differ depending on teh types of policies applied.
