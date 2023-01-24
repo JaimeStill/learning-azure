@@ -487,3 +487,290 @@ The nodes in a spot node pool are assigned a taint that equals `kubernetes.azure
     nginx | 1/1 | Running | 0 | 43s | 10.244.3.3 | aks-batchprocpl2-25254417-vmss000000 | \<none\> | \<none\>]
 
     Notice the name of the node, `aks-batchprocpl2-25254417-vmss000000`. This node is part of the `batchprocpl2` spot node pool that you created earler.
+
+## Configure Azure Policy for Kubernetes on an AKS Cluster
+
+In this exercise, you'll configure Azure Policy for Azure Kubernetes Service on your AKS cluster. You'll configure a **Kubernetes cluster containers CPU and memory resource limits should not exceed the specified limits** policy. Finally, you'll test that the policy denies the scheduling of workloads that exceed the policy's resource parameters.
+
+### Enable the ContainerService and PolicyInsights Resource Providers
+
+1. Sign into the Azure CLI:
+
+    ```bash
+    az login
+    ```
+
+2. Azure Policy for AKS requires the cluster version to be 1.14 or later. Run the following to validate your AKS cluster version:
+
+    ```bash
+    az aks list
+    ```
+
+    Make sure that the reported cluster version is 1.14 or later.
+
+3. Register the Azure Kubernetes Service provider bu running the `az provider register` command:
+
+    ```bash
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+4. Register the Azure Policy provider by running the `az provider register` command:
+
+    ```bash
+    az provider register --namespace Microsoft.PolicyInsights
+    ```
+
+5. Enable the installation of the add-on by running the `az feature register` command:
+
+    ```bash
+    az feature register \
+        --namesacpe Microsoft.ContainerService \
+        --name AK-AzurePolicyAutoApprove
+    ```
+
+6. Check that the registration is successful by querying the feature-list table. Use the `az feature list` command to run the query. The feature's registration can take several minutes to finish, so you'll have to check the result periodically.
+
+    ```bash
+    az feature list \
+        -o table \
+        --query "[?contains(name, 'Microsoft.ContainerService/AKS-AzurePolicyAutoApprove')].{Name:name,State:properties.state}"
+    ```
+
+7. Run the `az provider register` command to propogate the update after you confirm that the feature-list query command shows 'Registered':
+
+    ```bash
+    az provider register -n Microsoft.ContainerService
+    ```
+
+### Enable the Azure Policy Add-on
+
+1. Run the `az aks enable-addons` command to enable the `azure-policy` add-on for your cluster:
+
+    ```bash
+    az aks enable-addons \
+        --addons azure-policy \
+        --name $AKS_CLUSTER_NAME \
+        --resource-group $RESOURCE_GROUP
+    ```
+
+2. Verify that the azure-policy pod is installed in the `kube-system` namespace and that the gatekeeper pod is installed in the `gatekeeper-system` namespace. To do so, run the following:
+
+    ```bash
+    kubectl get pods -n kube-system
+    ```
+
+    Output:
+
+    NAME | READY | STATUS | RESTARTS | AGE
+    -----|-------|--------|----------|----
+    azure-policy-{uuid} | 1/1 | Running | 0 | 12m
+    azure-policy-webhook-{uuid} | 1/1 | Running | 0 | 12m
+
+    ```bash
+    kubectl get pods -n gatekeeper-system
+    ```
+
+    Output:
+
+    NAME | READY | STATUS | RESTARTS | AGE
+    -----|-------|--------|----------|----
+    gatekeeper-controller-manager-{uuid} | 1/1 | Running | 0 | 15m
+
+3. Verify that the latest add-on is installed by running the `az aks show` command. This command retrieves the configuration information for your cluster:
+
+    ```bash
+    az aks show \
+        --resource-group $RESOURCE_GROUP \
+        --name $AKS_CLUSTER_NAME \
+        -o table --query "addonProfiles.azurepolicy"
+    ```
+
+    Output:
+
+    ```json
+    {
+        "config": null,
+        "enabled": true,
+        "identity": null
+    }
+    ```
+
+### Assign a Built-In Policy Definition
+
+To configure thet new Azure Policy, use the Policy service in the Azure portal.
+
+1. Sign into the [Azure Portal](https://portal.azure.com).
+
+2. Locate the **Policy** service in the Azure portal. To do so, in the search bar at the top of the portal, search for and select *Policy*.
+
+3. Select the **Policy** service from the list of services, as shown here:
+
+    ![policy-service-search-result](https://learn.microsoft.com/en-us/training/modules/aks-optimize-compute-costs/media/7-search-result.png)
+
+4. In the left menu pane, under **Authoring**, select **Assignments**:
+
+    ![policy-service-pane](https://learn.microsoft.com/en-us/training/modules/aks-optimize-compute-costs/media/7-assignment-option.png)
+
+5. In the top menu bar, select **Assign policy**:
+
+    ![assign-policy](https://learn.microsoft.com/en-us/training/modules/aks-optimize-compute-costs/media/7-assign-policy.png)
+
+6. On the **Basics** tab, enter the following values for each setting to create your policy:
+
+    Setting | Value
+    --------|------
+    Scope | Select the ellipsis button. The **Scope** pane appears. Under the **subscription**, select the subscription that holds your resource group. For **Resource Group**, select **akscostsavinggrp**, and then select **Select**.
+    Exclusions | Leave empty.
+    Policy Definition | Select the ellipsis button. The **Available Definitions** pane appears. In the **Search** box, filter selection by entering *CPU*. On the **Policy Definitions** tab, select the **Kubernetes cluster containers CPU and memory resource limits should not exceed the specified limits.** and then select **Select**.
+    Assignment Name | Accept default.
+    Description | Leave empty.
+    Policy Enforcement | Make sure this option is set to **Enabled**.
+    Assigned By | Accept default.
+
+    Example completed **Basics** tab:
+
+    ![assign-policy-basics](https://learn.microsoft.com/en-us/training/modules/aks-optimize-compute-costs/media/7-complete-basic-tab.png)
+
+7. Select the **Parameters** tab to specify the parameters for the policy.
+
+8. Set the following values for each of the parameter settings:
+
+    Setting | Value
+    --------|------
+    Max allowed CPU units | Set the value to **200m**. The policy matches this value to both the workload resource-request value and the workload limit value specified in the workload's manifest file.
+    Max allowed memory bytes | Set the value to 256Mi. The policy matches this value to both the workload resource-request value adn the workload limit value specified in the workload's manifest file.
+
+    Example completed **Parameters** tab:
+
+    ![assign-policy-parameters](https://learn.microsoft.com/en-us/training/modules/aks-optimize-compute-costs/media/7-complete-parameters-tab.png)
+
+9. Select the **Remediation** tab. In this tab, you select how the new policy impacts resources that already exist. By default, only newly created resources are effected by the new policy. Leave the default configuration as it is on this tab.
+
+    Example completed **Remediation** tab:
+
+    ![assign-policy-remediation](https://learn.microsoft.com/en-us/training/modules/aks-optimize-compute-costs/media/7-complete-remediation-tab.png)
+
+10. Select the **Review + create** tab. Review the values you've chosen, then select **Create**.
+
+> If you're using an existing AKS cluster, the policy assignment may take about 15 minutes to apply.
+
+### Test Resource Requests
+
+The final step is to test the new policy. You'll deploy a test workload that includes resource requests and limits that violate the new policy.
+
+1. Create a manifest file for the Kubernetes deployment named [`test-policy.yaml`](./assets/test-policy.yaml):
+
+    ```yaml
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: nginx
+      labels:
+        env: test
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        imagePullRequest: IfNotPresent
+        resources:
+          requests:
+            cpu: 500m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 500Mi
+    ```
+
+2. Run the `kubectl apply` command to apply the configuration and deploy the application in the `costsavings` namespace:
+
+    ```bash
+    kubectl apply \
+        --namespace costsavings \
+        -f test-policy.yaml
+    ```
+
+    Output:
+
+    ```
+    Error from server (
+    [denied by azurepolicy-container-limits-52f2942767eda208f8ac3980dc04b548c4a18a2d1f7b0fd2cd1a7c9e50a92674] container <nginx> memory limit <500Mi> is higher than the maximum allowed of <256Mi>
+    [denied by azurepolicy-container-limits-52f2942767eda208f8ac3980dc04b548c4a18a2d1f7b0fd2cd1a7c9e50a92674] container <nginx> cpu limit <1> is higher than the maximum allowed of <200m>)
+    : error when creating "test-deploy.yml"
+    : admission webhook "validation.gatekeeper.sh" denied the request: 
+    [denied by azurepolicy-container-limits-52f2942767eda208f8ac3980dc04b548c4a18a2d1f7b0fd2cd1a7c9e50a92674] container <nginx> memory limit <500Mi> is higher than the maximum allowed of <256Mi>
+    [denied by azurepolicy-container-limits-52f2942767eda208f8ac3980dc04b548c4a18a2d1f7b0fd2cd1a7c9e50a92674] container <nginx> cpu limit <1> is higher than the maximum allowed of <200m>
+    ```
+
+    Notice how the admission webhook, `validation.gatekeeper.sh`, denied the request to schedule the pod.
+
+3. Open the manifest file and fix the resource request:
+
+    **Saved as [`test-policy-fixed.yaml`](./assets/test-policy-fixed.yaml)**  
+
+    ```yaml
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+    ```
+
+4. Run the `kubectl apply` command to apply the configuration and deploy the application in the `costsavings` namespace:
+
+    ```bash
+    kubectl apply \
+        --namespace costsavings \
+        -f test-policy-fixed.yaml
+    ```
+
+    Output:
+
+    ```
+    pod/nginx created
+    ```
+
+5. Run the `kubectl get pods` command to view the newly created popd. Make sure to query for pods in the `costsavings` namespace.
+
+    ```bash
+    kubectl get pods --namespace costsavings
+    ```
+
+    Output:
+
+    NAME | READY | STATUS | RESTARTS | AGE
+    -----|-------|--------|----------|----
+    nginx | 1/1 | Running | 0 | 50s
+
+## Clean Up Resources
+
+1. List the Resource Groups in the Azure CLI:
+
+    ```bash
+    az group list -o table
+    ```
+
+    Output:
+
+    NAME | LOCATION | STATUS
+    -----|----------|-------
+    **rg-akscostsaving** | eastus | Succeeded
+
+2. Delete the **rg-akscostsaving** resource group:
+
+    ```bash
+    az group delete -n rg-akscostsaving -y
+    ```
+
+3. Run the `kubectl config delete-context` command to remove the deleted cluster's context:
+
+    ```bash
+    kubectl config delete-context akscostsaving-{number}
+    ```
+
+    Output:
+
+    ```
+    delete context akscostsaving-{number} from /home/user/.kube/config
+    ```
