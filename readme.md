@@ -39,12 +39,16 @@
     * [AKS Ingress Controllers](https://learn.microsoft.com/en-us/azure/aks/ingress-tls?tabs=azure-cli)
     * [AKS Production Baseline](https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/containers/aks/baseline-aks)
 * [helm](https://helm.sh/)
+    * [Template Functions and Pipelines](https://helm.sh/docs/chart_template_guide/functions_and_pipelines/)
+    * [Template Function List](https://helm.sh/docs/chart_template_guide/function_list/)
 * [Development Containers](https://containers.dev/)
 * [Government Cloud Services in Compliance Scope](https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope)
 * [Ansible](https://www.ansible.com/overview/how-ansible-works)
 * [Terraform](https://www.terraform.io/use-cases/manage-kubernetes)
 * [Vault](https://www.vaultproject.io/)
 * [Portainer](https://www.portainer.io/)
+* [Go Template Language](https://pkg.go.dev/text/template)
+* [Sprig](https://github.com/Masterminds/sprig)
 
 
 ### Related Technology Links
