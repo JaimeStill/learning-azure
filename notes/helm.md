@@ -643,5 +643,5 @@ Once the rollback completes, you can review the deployment history using the `he
 REVISION | UPDATED | STATUS | CHART | APP VERSION | DESCRIPTION
 ---------|---------|--------|-------|-------------|------------
 1 | Mon Oct 11 17:25:33 2021 | superseded | aspnet-core-1.3.18 | 3.1.19 | Install complete
-2 | Mon Oct 11 17:35:13 2021 | superseded | aspnet-core-1.3.18 | 3.1.19 | Rolled back to 1
-3 | Mon Oct 11 17:38:13 2021 | deployed | aspnet-core-1.3.18 | 3.1.19 | Upgrade complete
+2 | Mon Oct 11 17:38:13 2021 | superseded | aspnet-core-1.3.18 | 3.1.19 | Upgrade complete
+3 | Mon Oct 11 17:35:13 2021 | deployed | aspnet-core-1.3.18 | 3.1.19 | Rolled back to 1
