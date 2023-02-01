@@ -504,7 +504,7 @@ Use spot node pools to:
 * Define the maximum price you want to pay per hour.
 * Enable the recommended AKS Kubernetes cluster autoscaler when using spot node pools.
 
-For example, to support a batch-processing, you can create a spot user node pool and enable the cluster autoscaler. You teh nconfigure the horizontal pod scaler to deploy additional batch-processing services to match resource demands.
+For example, to support a batch-processing, you can create a spot user node pool and enable the cluster autoscaler. You the nconfigure the horizontal pod scaler to deploy additional batch-processing services to match resource demands.
 
 As the demand for nodes increases, the cluster autoscaler can scale the number of nodes up and down in the spot node pool. If node evictions happen, the cluster autoscaler keeps trying to scale up the node count if additional nodes are still needed.
 
@@ -785,4 +785,4 @@ Modify | Adds, updates, or removes tags on a resource during creation or update.
 
 ### Policy Remediation
 
-When you assign policies, it's possible that resources already exist and are impacted by the new policy. By default, only newly created resources are affected by the new policy. You can update existing resources by using a remediation task after you assign the policy. Remediation tasks differ depending on teh types of policies applied.
+When you assign policies, it's possible that resources already exist and are impacted by the new policy. By default, only newly created resources are affected by the new policy. You can update existing resources by using a remediation task after you assign the policy. Remediation tasks differ depending on the types of policies applied.

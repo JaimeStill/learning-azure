@@ -239,7 +239,7 @@ To access the value in a template, you can use the following syntax:
 
 A **Supplied** value allows you to process arbitrary values in the chart template. The `values.yaml` file defines these values.
 
-IN the xamples, teh development team allows for three configurable values. A container registry name (`registry`), a docker release tag (`dockerTag`), and a Kubernetes pull policy (`pullPolicy`).
+IN the xamples, the development team allows for three configurable values. A container registry name (`registry`), a docker release tag (`dockerTag`), and a Kubernetes pull policy (`pullPolicy`).
 
 Here's an example of the `values.yaml` file:
 

@@ -1,6 +1,6 @@
 # App Package Management Using Helm
 
-> The following exercise should be run from an [Azure Cloud Shell](https://portal.azure.com/#cloudshell/)
+> The following exercise should be run from an [Azure Cloud Shell](https://portal.azure.com/#cloudshell/) with the Bash profile.
 
 You use an Azure Kubernetes Service (AKS) cluster to host the drone tracking solution. The DevOps team uses standard declarative YAML files to deploy various services in the solution. In the current deployment workflow, the development teams create the deployment files for each application. The team is reviewing Helm as an alternative to simplify the management of cloud-native application deployments.
 
@@ -39,7 +39,7 @@ Parameter | Description
 
 ### How to Manage an Unexpected Failure
 
-Non-blocking warnings are expected in the deployment process. If an unexpected exception occurs, you can reset any changes made by the script by running teh following command:
+Non-blocking warnings are expected in the deployment process. If an unexpected exception occurs, you can reset any changes made by the script by running the following command:
 
     ```bash
     cd ~ && \
@@ -256,18 +256,18 @@ You can find a cache copy of the Helm chart in the `$HOME/.cache/helm/repository
 
     ```
     -rw-r--r-- 1 user user   30621 Oct 11 17:25 aspnet-core-1.3.18.tgz
--rw-r--r-- 1 user user    1391 Oct 11 17:04 azure-marketplace-charts.txt
--rw-r--r-- 1 user user 4834112 Oct 11 17:04 azure-marketplace-index.yaml
+    -rw-r--r-- 1 user user    1391 Oct 11 17:04 azure-marketplace-charts.txt
+    -rw-r--r-- 1 user user 4834112 Oct 11 17:04 azure-marketplace-index.yaml
     ```
 
-    All Helm charts installed from repositories are cached in this folder. If you're interested in inspecting or modifying the ocntents of a chart, you can extract the zipped package from the cache folder and install the chart as a local chart.
+    All Helm charts installed from repositories are cached in this folder. If you're interested in inspecting or modifying the contents of a chart, you can extract the zipped package from the cache folder and install the chart as a local chart.
 
     For this exercise, the chart is already unpacked and available in the `~/mslearn-aks/modules/learn-helm-deploy-aks/src/drone-webapp-chart` folder.
 
 2. Inspect the existing Helm chart by recursively listing all contents of the `drone-webapp-chart` folder:
 
     ```bash
-    cd ~/mslearn-aks/modules/learn-helm-deploy-aks/src
+    cd ~/clouddrive/mslearn-aks/modules/learn-helm-deploy-aks/src
     find drone-webapp-chart/ -print
     ```
 
@@ -589,7 +589,7 @@ You're now ready to deploy the web app. You'll run the `helm install` command, w
 2. Once the web app is running, open the cluster's load balancer IP address in a browser to see the web app running. List the contents of the `create-aks-exports.txt` file to find the IP address of the load balancer:
 
     ```bash
-    cat ~/mslearn-aks/create-aks-exports.txt
+    cat ~/clouddrive/mslearn-aks/create-aks-exports.txt
     ```
 
     Here is an example of the app running in a web browser:
