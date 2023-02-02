@@ -4,6 +4,8 @@
     * [Explore Kubernetes Cluster](./exercises/01-explore-kubernetes-cluster/)
     * [Deploy to AKS](./exercises/02-deploy-to-aks/)
     * [Optimize AKS Compute Costs](./exercises/03-optimize-aks-compute-costs/)
+    * [Helm Package Management](./exercises/04-helm-package-management/)
+    * [Build a Containerized Web App with Docker](./exercises/05-containerized-docker-app/)
 * [Notes](./notes)
     * [Azure Kubernetes Services](./notes/aks.md)
     * [Azure CLI](./notes/azure-cli.md)
@@ -20,6 +22,7 @@
 [Back to Top](#learning-containers)
 
 * [Intro to Kubernetes on Azure](https://learn.microsoft.com/en-us/training/paths/intro-to-kubernetes-on-azure/)
+* [Architect Modern Applications in Azure](https://learn.microsoft.com/en-us/training/paths/architect-modern-apps/)
 * [Your First Microservice](https://dotnet.microsoft.com/en-us/learn/aspnet/microservice-tutorial)
 * [Deploy a Microservice to Azure](https://dotnet.microsoft.com/en-us/learn/aspnet/deploy-microservice-tutorial)
 * [.NET Microservices](https://learn.microsoft.com/en-us/training/modules/dotnet-microservices)
