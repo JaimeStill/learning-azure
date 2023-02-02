@@ -34,6 +34,8 @@
 
 * [Docker](https://docs.docker.com/)
     * [Docker Hub](https://hub.docker.com)
+    * [Dockerfile Reference](https://docs.docker.com/engine/reference/builder/)
+    * [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
 * [Kubernetes](https://kubernetes.io/docs/home/)
     * [Ingress Controllers](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/)
     * [Service Types](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types)
