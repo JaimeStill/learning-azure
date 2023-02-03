@@ -73,15 +73,6 @@ Here, you'll create a container in Azure and expose it to the Internet with a fu
 
     ![image](https://user-images.githubusercontent.com/14102723/216423623-14cdd328-3a03-40c2-a82d-2cf021c541c3.png)
 
-8. Delete the Container:
-
-    ```bash
-    az container delete \
-        --resource-group learn-deploy-aci-rg \
-        --name hello-container \
-        -y
-    ```
-
 ## Control Restart Behavior
 
 The ease and speed of deploying containers in Azure Container Instances makes it a great fit for executing run-once tasks like image rendering or building and testing applications.
@@ -145,15 +136,6 @@ TO see the restart policy in action, create a container instance from the **azur
      ('my', 441),
      ('in', 399),
      ('HAMLET', 386)]
-    ```
-
-4. Delete the container:
-
-    ```bash
-    az container delete \
-        --resource-group learn-deploy-aci-rg \
-        --name restart-container \
-        -y
     ```
 
 ## Set Environment Variables
@@ -366,13 +348,6 @@ Here, you'll mount an Azure file share to an Azure container instance so you can
     az storage share create --name aci-share
     ```
 
-    > If you get the error: **Please provide storage account name or connection string**, run:
-    > ```bash
-    > az storage share create \
-    >   --name aci-share \
-    >   --connection-string $AZURE_STORAGE_CONNECTION_STRING
-    > ```
-
 ### Get Storage Credentials
 
 To mount an Azure file share as a volume in Azure Container Instances, you need these three values:
@@ -465,3 +440,174 @@ To mount an Azure file share as a volume in a container, you specify the share a
 
 ## Troubleshoot Azure Container Instances
 
+To help you understand basic ways to troubleshoot container instances, here you'll perform some basic operations such as:
+
+* Pulling container logs
+* Viewing container events
+* Attaching to a container instance
+
+### Get Logs From Your Prior Deployed Container Instance
+
+To see the output from the cats and dogs voting app container:
+
+```bash
+az container logs \
+    --resource-group learn-deploy-aci-rg \
+    --name secure-container
+```
+
+Output resemebles:
+
+```
+Checking for script in /app/prestart.sh
+Running script /app/prestart.sh
+Running inside /app/prestart.sh, you could add migrations to this file, e.g.:
+
+#! /usr/bin/env bash
+
+# Let the DB start
+sleep 10;
+# Run migrations
+alembic upgrade head
+
+...
+```
+
+### Get Container Events
+
+`az container attach` command provides diagnostic information during container startup. Once teh container has started, it also writes standard output and standard error streams to your local terminal:
+
+```bash
+az container attach \
+    --resource-group learn-deploy-aci-rg \
+    --name secure-container
+```
+
+Outut resembles:
+
+```
+Container 'aci-demo' is in state 'Running'...
+(count: 1) (last timestamp: 2021-09-21 23:48:14+00:00) pulling image "mcr.microsoft.com/azuredocs/azure-vote-front"
+(count: 1) (last timestamp: 2021-09-21 23:49:09+00:00) Successfully pulled image "mcr.microsoft.com/azuredocs/azure-vote-front"
+(count: 1) (last timestamp: 2021-09-21 23:49:12+00:00) Created container
+(count: 1) (last timestamp: 2021-09-21 23:49:13+00:00) Started container
+
+Start streaming logs:
+Checking for script in /app/prestart.sh
+Running script /app/prestart.sh
+…
+```
+
+### Execute a Command in Your Container
+
+As you diagnose and troubleshoot issues, you may need to run commands directly on your running container.
+
+1. Start an interactive session on your container:
+
+    ```bash
+    az container exec \
+        --resource-group learn-deploy-aci-rg \
+        --name secure-container \
+        --exec-command /bin/sh
+    ```
+
+    At this point, you're effectively working inside of the container.
+
+2. Display the contents of the working directory:
+
+    ```bash
+    ls
+    __pycache__ config_file.cfg main.py prestart.sh static template uwsgi.ini
+    ```
+
+3. Explore the system further if you wish. Run `exit` to stop the interactive session.
+
+### Monitor CPU and Memory Usage on Your Container
+
+1. Get the ID of your Azure container instance and store the ID in a Bash variable:
+
+    ```bash
+    CONTAINER_ID=$(az container show \
+        --resource-group learn-deploy-aci-rg \
+        --name secure-container \
+        --query id \
+        --output tsv)
+    ```
+
+2. Retrieve CPU usage information:
+
+    ```bash
+    az monitor metrics list \
+        --resource $CONTAINER_ID \
+        --metrics CPUUsage \
+        --output table
+    ```
+
+    Note the `--metrics` argument. Here, **CPUUsage** specifies to retrieve CPU usage.
+
+    Output resembles:
+
+    ```
+    Timestamp            Name          Average
+    -------------------  ------------  -----------
+    2021-09-21 23:39:00  CPU Usage
+    2021-09-21 23:40:00  CPU Usage
+    2021-09-21 23:41:00  CPU Usage
+    2021-09-21 23:42:00  CPU Usage
+    2021-09-21 23:43:00  CPU Usage      0.375
+    2021-09-21 23:44:00  CPU Usage      0.875
+    2021-09-21 23:45:00  CPU Usage      1
+    2021-09-21 23:46:00  CPU Usage      3.625
+    2021-09-21 23:47:00  CPU Usage      1.5
+    2021-09-21 23:48:00  CPU Usage      2.75
+    2021-09-21 23:49:00  CPU Usage      1.625
+    2021-09-21 23:50:00  CPU Usage      0.625
+    2021-09-21 23:51:00  CPU Usage      0.5
+    2021-09-21 23:52:00  CPU Usage      0.5
+    2021-09-21 23:53:00  CPU Usage      0.5
+    ```
+
+3. Retrieve memory usage information:
+
+    ```bash
+    az monitor metrics list \
+        --resource $CONTAINER_ID \
+        --metrics MemoryUsage \
+        --output table
+    ```
+
+    Here, you specified **MemoryUsage** for the `--metrics` argument to retrieve memory usage information.
+
+    Output resembles:
+
+    ```
+    Timestamp            Name          Average
+    -------------------  ------------  -----------
+    2021-09-21 23:43:00  Memory Usage
+    2021-09-21 23:44:00  Memory Usage  0.0
+    2021-09-21 23:45:00  Memory Usage  15917056.0
+    2021-09-21 23:46:00  Memory Usage  16744448.0
+    2021-09-21 23:47:00  Memory Usage  16842752.0
+    2021-09-21 23:48:00  Memory Usage  17190912.0
+    2021-09-21 23:49:00  Memory Usage  17506304.0
+    2021-09-21 23:50:00  Memory Usage  17702912.0
+    2021-09-21 23:51:00  Memory Usage  17965056.0
+    2021-09-21 23:52:00  Memory Usage  18509824.0
+    2021-09-21 23:53:00  Memory Usage  18649088.0
+    2021-09-21 23:54:00  Memory Usage  18845696.0
+    2021-09-21 23:55:00  Memory Usage  19181568.0
+    ```
+
+## Clean Up Resources
+
+1. List the Resource Groups in the Azure CLI:
+
+    ```bash
+    az group list -o table
+    ```
+
+2. Delete the **learn-deploy-aci-rg** resource group:
+
+    ```bash
+    az group delete -n learn-deploy-aci-rg -y
+    ```
