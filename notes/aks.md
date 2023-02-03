@@ -1,5 +1,7 @@
 # Azure Kubernetes Service
 
+> [Azure CLI Reference](https://learn.microsoft.com/en-us/cli/azure/service-page/azure%20kubernetes%20service%20(aks)?view=azure-cli-latest)
+
 Azure Kubernetes Service (AKS) manages your hosted Kubernetes environment and makes it simple to deploy and manage containerized applications in Azure. Your AKS environment is enabled with features such as automated updates, self-healing, and easy scaling. The Kubernetes cluster master is managed by Azure and is free. You managae the agent nodes in the cluster and only pay for the VMs on which your nodes run.
 
 You can either create your cluster in the Azure portal or use the Azure CLI. When you create the cluster, you can use Resource Manager templates to automate cluster creation. With these templates, you specify features such as advanced networking, Azure Active Directory (AD) integration, and monitoring. This information is then used to automate the cluster deployment on your behalf.
