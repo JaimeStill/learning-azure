@@ -366,6 +366,13 @@ Here, you'll mount an Azure file share to an Azure container instance so you can
     az storage share create --name aci-share
     ```
 
+    > If you get the error: **Please provide storage account name or connection string**, run:
+    > ```bash
+    > az storage share create \
+    >   --name aci-share \
+    >   --connection-string $AZURE_STORAGE_CONNECTION_STRING
+    > ```
+
 ### Get Storage Credentials
 
 To mount an Azure file share as a volume in Azure Container Instances, you need these three values:
@@ -414,7 +421,7 @@ To mount an Azure file share as a volume in a container, you specify the share a
     az container show \
         --resource-group learn-deploy-aci-rg \
         --name aci-files-container \
-        --query ipAddress.FQDN \
+        --query ipAddress.ip \
         --output tsv
     ```
 
@@ -456,12 +463,5 @@ To mount an Azure file share as a volume in a container, you specify the share a
     Store in Azure please
     ```
 
-8. Delete the container:
-
-    ```bash
-    az container delete \
-        --resource-group learn-deploy-aci-rg \
-        --name aci-files-container \
-        -y
-    ```
+## Troubleshoot Azure Container Instances
 
