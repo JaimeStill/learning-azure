@@ -6,6 +6,8 @@
     * [Optimize AKS Compute Costs](./exercises/03-optimize-aks-compute-costs/)
     * [Helm Package Management](./exercises/04-helm-package-management/)
     * [Build a Containerized Web App with Docker](./exercises/05-containerized-docker-app/)
+    * [Azure Container Instances](./exercises/06-azure-container-instances/)
+    * [Azure Container Registry](./exercises/07-azure-container-registry/)
 * [Notes](./notes)
     * [Azure Kubernetes Services](./notes/aks.md)
     * [Azure CLI](./notes/azure-cli.md)
