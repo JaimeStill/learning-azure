@@ -1,6 +1,7 @@
 # Notes
 
 * [Azure Kubernetes Services](./aks.md)
+* [Azure App Service](./azure-app-service.md)
 * [Azure CLI](./azure-cli.md)
 * [Codespaces](./codespaces.md)
 * [Docker](./docker.md)
