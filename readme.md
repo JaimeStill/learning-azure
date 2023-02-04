@@ -9,6 +9,7 @@
     * [Azure Container Instances](./exercises/06-azure-container-instances/)
     * [Azure Container Registry](./exercises/07-azure-container-registry/)
     * [Azure App Service](./exercises/08-azure-app-service/)
+    * [Deploy and Run a Containerized Web App with Azure App Service](./exercises/09-app-service-containerized/)
 * [Notes](./notes)
     * [Azure Kubernetes Services](./notes/aks.md)
     * [Azure App Service](./notes/azure-app-service.md)
