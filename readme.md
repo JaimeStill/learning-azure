@@ -10,6 +10,7 @@
     * [Azure Container Registry](./exercises/07-azure-container-registry/)
     * [Azure App Service](./exercises/08-azure-app-service/)
     * [Deploy and Run a Containerized Web App with Azure App Service](./exercises/09-app-service-containerized/)
+    * [Connect an App to Azure Cache for Redis Using .NET Core](./exercises/10-connect-azure-cache-dotnet/)
 * [Notes](./notes)
     * [Azure Kubernetes Services](./notes/aks.md)
     * [Azure App Service](./notes/azure-app-service.md)
