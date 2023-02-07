@@ -30,7 +30,7 @@ In this exercise you will learn how to:
     ```bash
     az redis create \
         --resource-group redis-rg \
-        --name jpsrediscache \
+        --name jps-cache \
         --sku Basic \
         --vm-size c0 \
         --location eastus
@@ -99,12 +99,12 @@ In this exercise you will learn how to:
     <cache-name>.redis.cache.windows.net:6380,password=<access-key>,ssl=True,abortConnect=False
     ```
 
-    * `<cache-name>` is the name of the Azure Cache: `jpsrediscache`.
+    * `<cache-name>` is the name of the Azure Cache: `jps-cache`.
     * `<access-key>` can be found with the following:
         ```bash
         az redis list-keys \
             --resource-group redis-rg \
-            --name jpsrediscache \
+            --name jps-cache \
             --query "primaryKey" | tr -d '"'
         ```
 

@@ -39,4 +39,53 @@ In this module you will:
         --location eastus
     ```
 
+## Initialize CLI App
+
+1. Create a new .NET Console app:
+
+    ```bash
+    dotnet new console \
+        --output src/ \
+        --name RedisData
+    ```
+
+2. Add the **ServiceStack.Redis** package:
+
+    ```bash
+    dotnet add package ServiceStack.Redis
+    ```
+
+3. Add and configure [`.gitignore`](./src/.gitignore):
+
+    ```gitignore
+    bin/
+    obj/
+    ```
+
+3. Build out initial [`Program.cs`](./src/Program.cs) shell:
+
+    ```cs
+    using ServiceStack.Redis;
+
+    if (args.Length > 0)
+    {
+        try
+        {
+            string connection = args[0];
+
+            // Interface with Redis
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("An error occurred interfacing with Azure Cache for Redis.", ex);
+        }
+    }
+    else
+    {
+        throw new Exception("No connection string was provided");
+    }
+    ```
+
+    This setup enables the connection string to be passed in as an argument with the execution of the CLI app.
+
 ## Create a Transaction in Azure Cache for Redis
