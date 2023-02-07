@@ -141,7 +141,176 @@ https://learn.microsoft.com/en-us/training/modules/optimize-your-web-apps-with-r
 5. Add JSON configuration support:
 
     ```bash
+    dotnet add package Microsoft.Extensions.Configuration.Binder
     dotnet add package Microsoft.Extensions.Configuration.Json
+    ```
+
+6. Setup [`Program.cs`](./src/Program.cs) to read configuration:
+
+    ```cs
+    using Microsoft.Extensions.Configuration;
+
+    IConfiguration config = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json")
+        .Build();
+    ```
+
+7. Read the connection string from the configuration:
+
+    ```cs
+    string? connection = config.GetValue<string>("CacheConnection");
+    ```
+
+8. Add support for the Redis cache .NET client:
+
+    ```bash
+    dotnet add package StackExchange.Redis
+    ```
+
+    Add `using` statement to [`Program.cs`](./src/Program.cs):
+
+    ```cs
+    using StackExchange.Redis;
+    ```
+
+9. Connect to the cache:
+
+    ```cs
+    using ConnectionMultiplexer cache = ConnectionMultiplexer.Connect(connection);
+    ```
+
+10. Add a value to the cache:
+
+    ```cs
+    IDatabase db = cache.GetDatabase();
+
+    bool setValue = await db.StringSetAsync("test:key", "cache this");
+    Console.WriteLine($"SET: {setValue}");
+    ```
+
+11. Get a value from the cache:
+
+    ```cs
+    string? getValue = await db.StringGetAsync("test:key");
+
+    if (getValue is not null)
+        Console.WriteLine($"GET: {getValue}");
+    ```
+
+12. Increment a value:
+
+    ```cs
+    long newValue = await db.StringIncrementAsync("counter", 50);
+    Console.WriteLine($"INCR new value = {newValue}");
+    ```
+
+13. Ping the server then flush the database:
+
+    ```cs
+    RedisResult result = await db.ExecuteAsync("ping");
+    Console.WriteLine($"PING = {result.Type} : {result}");
+
+    result = await db.ExecuteAsync("flushdb");
+    Console.WriteLine($"FLUSHDB = {result.Type} : {result}");
+    ```
+
+Final [`Program.cs`](./src/Program.cs):
+
+```cs
+using Microsoft.Extensions.Configuration;
+using StackExchange.Redis;
+
+IConfiguration config = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json")
+    .Build();
+
+string? connection = config.GetValue<string>("CacheConnection");
+
+if (connection is not null)
+{
+    using ConnectionMultiplexer cache = ConnectionMultiplexer.Connect(connection);
+
+    IDatabase db = cache.GetDatabase();
+
+    bool setValue = await db.StringSetAsync("test:key", "cache this");
+    Console.WriteLine($"SET: {setValue}");
+
+    string? getValue = await db.StringGetAsync("test:key");
+
+    if (getValue is not null)
+        Console.WriteLine($"GET: {getValue}");
+
+    long newValue = await db.StringIncrementAsync("counter", 50);
+    Console.WriteLine($"INCR new value = {newValue}");
+
+    RedisResult result = await db.ExecuteAsync("ping");
+    Console.WriteLine($"PING = {result.Type} : {result}");
+
+    result = await db.ExecuteAsync("flushdb");
+    Console.WriteLine($"FLUSHDB = {result.Type} : {result}");
+}
+```
+
+### Serialize an Object to Cache
+
+1. Create a [`CacheData.cs`](./src/CacheData.cs) record for storing data:
+
+    ```cs
+    namespace SportsTracker;
+
+    public record CacheData
+    {
+        public string Name { get; set; }
+        public int Value { get; set; }
+        public DateTime Date { get; set; }
+
+        public CacheData(string name, int value, DateTime date)
+        {
+            Name = name;
+            Value = value;
+            Date = date;
+        }
+
+        public override string ToString() =>
+            $"{Name}:{Value}:{Date.ToString("dd-MMM-yyyy")}";
+    }
+    ```
+
+2. Add a `using` statement for `SportsTracker` and set / get an instance of `CacheData`:
+
+    ```cs
+    using SportsTracker;
+
+    // right after INCR example
+    CacheData data = new("Test", 333, DateTime.Now);
+
+    bool setData = await db.StringSetAsync("data:test", JsonSerializer.Serialize(data));
+    Console.WriteLine($"SET: {setData}");
+
+    string? getResult = await db.StringGetAsync("data:test");
+
+    if (getResult is not null)
+    {
+        CacheData? getData = JsonSerializer.Deserialize<CacheData>(getResult);
+
+        if (getData is not null)
+            Console.WriteLine($"GET: {getData.ToString()}");
+    }
+    // PING and FLUSHDB examples
+    ```
+
+3. Run and verify output:
+
+    ```
+    SET: True
+    GET: cache this
+    INCR new value = 50
+    PING = SimpleString : PONG
+    FLUSHDB = SimpleString : OK
+    SET: True
+    GET: Test:333:07-Feb-2023
     ```
 
 ## Clean Up
