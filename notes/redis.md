@@ -1,6 +1,8 @@
 # Redis
 
-Redis is a widely used, open-source caching solution.It's a key-value datastore that runs in memory, so it's very responsive.
+Redis (REmote DIctionary Server) is a widely used, open-source caching solution.It's a key-value datastore that runs in memory, so it's very responsive.
+
+Caching is the act of storing frequently accessed data in memory very close to the application that consumes the data. Caching is used to increase performance and reduce the load on your servers.
 
 Typically, organizations use Redis to complement their database apps. Combining Redis with back-end databases enables you to significantly improve your apps' performance.
 
@@ -13,6 +15,37 @@ Any caching solution should address four key requirements:
 * **Availability.** Any caching solution must be highly available. This helps ensure that your apps can deliver at peak performance, even if component failures occur.  
 
 * **Support for geographic distribution.** It's essential that a caching solution provides the same performance and scaling benefits everywhere in the world. This can be challenging if your data is geographically dispersed.  
+
+## Data Types
+
+Redis supports various data types, all oriented around *binary safe* strings. You can use any binary sequence for a value, from a string like "i-love-rocky-road" to the contents of an image file. An empty string is also a valid value.
+
+* Binary-safe strings (most common)
+* Lists of strings
+* Unordered sets of strings
+* Hashes
+* Sorted sets of strings
+* Maps of strings
+
+Each data value is associated with a *key* that can be used to look up the value from the cache. Redis works best with smaller values (100k or less), so consider chopping bigger data into multiple keys. Storing larger values is possible (up to 500MB), but increases network latency and can cause caching and out-of-memory issues if the cache isn't configured to expire old values.
+
+## Keys
+
+Redis keys are also binary-safe strings. Here are some guidelines for choosing keys:
+
+* Avoid long keys. They take up more memory and require longer lookup times because they have to be compared byte-by-byte. If you want to use a binary blob as the key, generate a unique hash and use that as the key instead. The maximum size of a key is 512M, but you should *never* use a key that size.
+
+* Use keys that can identify the data. For example, `sport:football;date:2008-02-02` would be a better key than `fb:8-2-2`. The former is more readable and the extra size is negligible. Find the balance between size and readability.
+
+* Use a convention. A good one is `object:id`, as in `sport:football`.
+
+## Data Storage
+
+Data in Redis is stored in **nodes** and **clusters**.
+
+**Nodes** are a space in Redis where your data is stored.
+
+**Clusters** are sets of three or more nodes across which your dataset is split. Clusters are useful because your operations will continue if a node fails or is unable to communicate with the rest of the cluster.
 
 ## Azure Cache for Redis
 
