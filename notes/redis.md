@@ -432,3 +432,34 @@ Once you're done with the Redis connection, you can `Dispose` the `ConnectionMul
 redisConnection.Dispose();
 redisConnection = null;
 ```
+
+## Transactions
+
+There are times when you must guarantee that multiple operations execute together. Transactions in Redis work by queueing multiple commands to be executed as a group. When a transaction is executed, the commands queued inside of it are guaranteed to execute without any other commands from other clients interleaved between them.
+
+To begin a transaction block, enter the `MULTI` command. Further commands will be queued and not executed immediately. Running the `EXEC` command will execute all of the queued commands as a transactional unit. If you decide you want to abort an open transaction while queueing commands, running the `DISCARD` command will close the transaction block without running *any* of the queued commands.
+
+Redis transactions do not support the concept of rollback. If you queue a command with incorrect syntax into a transaction block, the block will remain open, but will automatically be discareded if you attempt to execute it with `EXEC`. Commands in a transaction that fail *during* execution (after `EXEC` is called) do not cause a transaction to be aborted or rolled back - Redis will still run all of the commands and consider the transaction to have completed successfully.
+
+### Transactions with **ServiceStack.Redis**
+
+**ServiceStack.Redis** is a C# library for interacting with Redis.
+
+Transactions in **ServiceStack.Redis** are created by calling `IRedisClient.CreateTransaction()`. The `IRedisTransaction` object that is returned can have multiple commands queued into it with `QueueCommand()`. Calling `Commit()` on the transaction object will execute it.
+
+`IRedisTransaction` objects are disposable, and will automatically issue a `DISCARD` command if disposed before calling `Commit()`. This feature works well with C#'s `using` blocks: if you don't commit a transaction for any reason, you can trust that the transaction will automatically be discarded so that the Redis connection can continue to be used.
+
+Here's an example of using **ServiceStack.Redis** to create a transaction that can send a message that includes a picture URL and the contents of a text message:
+
+```cs
+public bool SendPictureAndText(string groupChatId, string text, string pictureUrl)
+{
+    using RedisClient client = new RedisClient(connection));
+    using IRedisTransaction transaction = client.CreateTransaction();
+
+    transaction.QueueCommand(c => c.PublishMessage(groupChatId, pictureUrl));
+    transaction.QueueCommand(c => c.PublishMessage(groupChatId, text));
+    
+    return transaction.Commit();
+}
+```
