@@ -1,5 +1,7 @@
 # Deploy to AKS
 
+https://learn.microsoft.com/en-us/training/modules/aks-deploy-container-app/
+
 ## Create an AKS Cluster
 [Back to Top](#deploy-to-aks)
 

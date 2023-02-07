@@ -1,5 +1,7 @@
 # Connect an App to Azure Cache for Redis Using .NET Core
 
+https://learn.microsoft.com/en-us/training/modules/develop-for-azure-cache-for-redis/
+
 In this exercise you will learn how to:
 
 * Create a new Redis Cache instance using Azure CLI commands.

@@ -1,5 +1,7 @@
 # Host a Web Appliaction with Azure App Service
 
+https://learn.microsoft.com/en-us/training/modules/host-a-web-app-with-azure-app-service/
+
 ## Install .NET SDK
 
 > Only required if .NET SDK 6 is not installed

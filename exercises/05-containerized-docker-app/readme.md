@@ -1,5 +1,7 @@
 # Build a Containerized Web App with Docker
 
+https://learn.microsoft.com/en-us/training/modules/intro-to-containers/
+
 ## Retrieve an Existing Docker Image and Deploy It Locally
 
 A good starting point for building and running your own Docker images is to take an existing image from Docker Hub and run it locally on your computer.

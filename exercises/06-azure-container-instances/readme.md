@@ -1,5 +1,7 @@
 # Azure Container Instances
 
+https://learn.microsoft.com/en-us/training/modules/run-docker-with-azure-container-instances/
+
 Containers offer a standardized and repeatable way to package, deploy, and manage cloud applications. Azure Container Instances let you run a container in Azure without managing virtual machines and without a higher-level service.
 
 Azure Container Instances are useful for scenarios that can operate in isolated containers, including simple applications, task automation, and build jobs. Here are some benefits:

@@ -1,5 +1,7 @@
 # App Package Management Using Helm
 
+https://learn.microsoft.com/en-us/training/modules/aks-app-package-management-using-helm/
+
 > The following exercise should be run from an [Azure Cloud Shell](https://portal.azure.com/#cloudshell/) with the Bash profile.
 
 You use an Azure Kubernetes Service (AKS) cluster to host the drone tracking solution. The DevOps team uses standard declarative YAML files to deploy various services in the solution. In the current deployment workflow, the development teams create the deployment files for each application. The team is reviewing Helm as an alternative to simplify the management of cloud-native application deployments.

@@ -1,5 +1,7 @@
 # Explore the Functionality of a Kubernetes Cluster
 
+https://learn.microsoft.com/en-us/training/modules/intro-to-kubernetes/
+
 Your goal in this exercise is to explore a Kubernetes installation with a single-node cluster. You're going to configure a *Microk8s* environment that's easy to setup and teardwon. Then, you'll deploy an NGINX website and scale it out to multiple instances. Finally, you'll go through the steps to delete the running pods and clean up the cluster.
 
 Keep in mind that there are other options, such a MiniKube and Kubernetes support in Docker, to do the same.

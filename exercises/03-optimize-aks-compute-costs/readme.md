@@ -1,5 +1,7 @@
 # Optimize Compute Costs on Azure Kubernetes Service
 
+https://learn.microsoft.com/en-us/training/modules/aks-optimize-compute-costs/
+
 ## Configure Multiple Nodes and Enable Scale-to-Zero on an AKS Cluster
 [Back to Top](#optimize-compute-costs-on-azure-kubernetes-service)
 
