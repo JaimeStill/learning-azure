@@ -5,4 +5,4 @@ https://learn.microsoft.com/en-us/training/modules/azure-redis-publish-subscribe
 In this module you will:
 
 * Subscribe to and publish messages using Azure Cache for Redis
-* Append entries to a stream and query the stream using Azure Cache for RedisS
+* Append entries to a stream and query the stream using Azure Cache for Redis
