@@ -59,6 +59,10 @@ Azure Cache for Redis can help improve performance in apps that interface with m
 
 Azure Cache for Redis can help you improve your apps' performance and scalability by copying frequently accessed data and storing it in memory.
 
+Azure Cache for Redis can be used as an event aggregation pipeline for microservices in a more comprehensive overall solution.
+
+Azure Cache for Redis can also be used as a message broker between various application components.
+
 Azure Cache for Redis provides the following application architecture patterns:
 
 * **Data cache.** Databases often are too large to directly load into cache. That's why it's common to use the *cache-aside* pattern. It loads data into the cache only as needed.  
@@ -556,3 +560,70 @@ Carefully consider which data to put in the cache. Not all data is suitable to b
 * **Consistency**: Implementing the cache-aside pattern doesn't guarantee consistency between the data store and the cache. Data in a data store can be changed without notifying the cache. This can lead to serious synchronization issues.
 
 The cache-aside pattern is useful when you're required to access data frequently from a data source that uses a disk. Using the cache-aside pattern, you'll store important data in a cache to help increase the speed of retrieving it.
+
+## Pub/Sub
+
+Distributed microservices often respond to events that occur in other microservices. This pattern is commonly referred to as *event-driven architecture*.
+
+An *event aggregator* is a middleware solution that aggregates the events across the entire solution in a scalable and straightforward to manage way. Here, you'll learn how the Pub/Sub feature of Azure Cache for Redis can serve as a middleware to simplify the communication between components of your application. Pub/Sub can help your application components subscribe to other's events and publish their own events.
+
+The **Pub/Sub** feature of Azure Cache for Redis routes messages between application components. Microservcies can use this feature to subscribe to messages or publish messages. Azure Cache for Redis will handle the routing of messages to the appropriate destinations without each microservice knowing where each of their messages should go.
+
+This feature can simplify the requirement of microservices reacting to events across the entire solution.
+
+## Subscribing to Channels
+
+Clients can subscribe toa  topic or range of topics used as a string value. In Redis nomenclature, topics are referred to as **channels**. For example, a client that wants to subscribe to the **staff.newhire** channel can use the appropriate command with the `staff.newhire` string value.
+
+Once the client is subscribed, all messages in the **staff.newhire** channel will be sent to that specific client.
+
+![pub-sub-channels](https://learn.microsoft.com/en-us/training/modules/azure-redis-publish-subscribe-streams/media/2-subscribe.svg)
+
+Redis includes a `SUBSCRIBE` command used to subscribe to one or more channels. This command is flexible enough to subscribe to a space-delimited list of channels.
+
+### Subscribe to a Single Known Channel
+
+The most common use of the `SUBSCRIBE` command is to subscribe to a single channel:
+
+```redis
+SUBSCRIBE staff.newhire
+```
+
+### Subscribe to Multiple Known Channels
+
+The `SUBSCRIBE` command can also be used to subscribe to multiple channels simultaneously. To subscribe to multiple channels, separate each channel with a single space in the channels list:
+
+```redis
+SUBSCRIBE orders.new orders.delete
+```
+
+### Subscribe to a Pattern of Channels
+
+The `PSUBSCRIBE` command uses glob-style patterns to subscribe a client to any channel that matches the specific pattern. There are three primary operators that you can use in a glob-style pattern:
+
+Operator | Description | Example | Matches | Does Not Match
+---------|-------------|---------|---------|---------------
+`?` | matches any single character | `l?arn` | `learn, loarn` | `larn, lern`
+`*` | Matches any content (including none) | `lear*` | `learn, learaeiou` | `larn, lern`
+`[]` | Matches only characters within the list | `le[ao]rn` | `learn, leorn` | `lern, leurn`
+
+**Example:** use the `PSUBSCRIBE` command to subscribe to all channels that begin with a prefix of **inventory**:
+
+```redis
+PSUBSCRIBE inventory.*
+```
+
+**Example:** use the `PSUBSCRIBE` command to subscribe to all channels with the suffix of **.new**:
+
+```redis
+PSUBSCRIBE *.new
+```
+
+**Example:** use the `PSUBSCRIBE` command to subscribe to all channels that include **orders** or **staff** as a whole word in the name:
+
+```redis
+PSUBSCRIBE *orders* *staff*
+```
+
+## Unsubscribe From Channels
+

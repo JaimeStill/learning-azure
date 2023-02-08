@@ -12,6 +12,8 @@
     * [Deploy and Run a Containerized Web App with Azure App Service](./exercises/09-app-service-containerized/)
     * [Connect an App to Azure Cache for Redis Using .NET Core](./exercises/10-connect-azure-cache-dotnet/)
     * [Optimize Your Web Applications By Caching Read-Only Data With Redis](./exercises/11-cache-readonly-data-redis/)
+    * [Work With Mutable and Partial Data in Azure Cache for Redis](./exercises/12-redis-transactions/)
+    * [Implement Pub/Sub and Streams in Azure Cache for Redis](./exercises/13-redis-pub-sub/)
 * [Notes](./notes)
     * [Azure Kubernetes Services](./notes/aks.md)
     * [Azure App Service](./notes/azure-app-service.md)
