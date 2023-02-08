@@ -463,3 +463,60 @@ public bool SendPictureAndText(string groupChatId, string text, string pictureUr
     return transaction.Commit();
 }
 ```
+
+## Data Expiration
+
+Data is not always permanent, and there are times you would like to delete it at a specific time. Data expiration is a feature that can automatically delete a key and value in the cache after a set amount of time.
+
+Data expiration is commonly used in situations where the data you're storing is short-lived. This is important beacuse Azure Cache for Redis is an in-memory database and you don't have as much memory available to use as you would if you were storing on disk. Because you have limited storage with Azure Cache for Redis, you want to make sure that you're only storing data that is important. If the data doesn't need to be around for a long time, make sure you set an expiration.
+
+### How to Use Data Expiration in Azure Cache for Redis
+
+There are different commands to implement and manage data expiration in Azure Cache for Redis:
+
+* `EXPIRE`: Sets the timeout of a key in seconds
+* `PEXPIRE`: Sets the timeout of a key in milliseconds
+* `EXPIREAT`: Sets the timeout of a key using an absolute Unix timestamp in seconds
+* `PEXPIREAT`: Sets the timeout of a key using an absolute Unix timestamp in milliseconds
+* `TTL`: Returns the remaining time a key has to live in seconds
+* `PTTL`: Returns the remaining time a key has to live in milliseconds
+* `PERSIST`: Makes a key never expire
+
+The most common command is `EXPIRE`.
+
+### Example of Data Expiration using **ServiceStack.Redis** in C#
+
+```cs
+public static void SetGroupChatName(string groupChatId, string chatName)
+{
+    using RedisClient client = new(connection);
+
+    // Create a key for group chat display names
+    string key = $"{groupChatId}displayName";
+
+    // Set the group chat display name
+    redisClient.SetValue(key, chatName);
+
+    // Set the expiration for one hour
+    redisClient.Expire(key, 3600);
+}
+```
+
+## Eviction Policies
+
+Memory is the most critical resource for Azure Cache for Redis, because it's an in-memory database. You can run into problems when you begin adding data that exceeds the amount of memory available. Azure Cache for Redis supports eviction policies, which indicate how data should be handled when you run out of memory.
+
+An eviction policy is a plan that determines how your data should be managed when you exceed the maximum amount of memory available. For example, using an eviction policy, you could tell Azure Cache for Redis to delete a random key to make room for the next data being inserted.
+
+### Types of Eviction Policies
+
+There are eight different eviction policies provided by Azure Cache for Redis. All of these perform an action when you attempt to insert data when you're out of memory:
+
+* **noeviction.** *No eviction* policy. Returns an error message if you attempt to insert data.
+* **allkeys-lru.** Removes the *least recently used* keys.
+* **allkeys-random.** Removes *random* keys.
+* **allkeys-lfu.** Evicts the *least frequently used* keys.
+* **volatile-lru.** Removes the *least recently used* keys out of all the keys with an expiration set.
+* **volatile-ttl.** Removes the keys with the shortest *time to live* based on the expiration set for them.
+* **volatile-random.** Removes *random* keys that have an expiration set.
+* **volatile-lfu.** Evicts the *least frequently used* keys out of all keys with an *expire* field set.

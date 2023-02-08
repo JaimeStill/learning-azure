@@ -1,4 +1,4 @@
-# Learning Containers
+# Learning Azure
 
 * [Exercises](./exercises/)
     * [Explore Kubernetes Cluster](./exercises/01-explore-kubernetes-cluster/)
