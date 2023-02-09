@@ -18,6 +18,8 @@
         * [Optimize Your Web Applications By Caching Read-Only Data With Redis](./exercises/redis/02-cache-readonly-data-redis/)
         * [Work With Mutable and Partial Data in Azure Cache for Redis](./exercises/redis/03-redis-transactions/)
         * [Implement Pub/Sub and Streams in Azure Cache for Redis](./exercises/redis/04-redis-pub-sub/)
+    * [Key Vault](./exercises/key-vault/)
+        * [Manage Secrets In Your Server Apps With Azure Key Vault](./exercises/key-vault/01-manage-secrets/)
 * [Notes](./notes)
     * [Azure Kubernetes Services](./notes/aks.md)
     * [Azure App Service](./notes/azure-app-service.md)
