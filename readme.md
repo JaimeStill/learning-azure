@@ -71,6 +71,7 @@
     * [StackExchange.Redis](https://stackexchange.github.io/StackExchange.Redis/)
         * [Pub/Sub](https://stackexchange.github.io/StackExchange.Redis/PubSubOrder.html)
         * [Streams](https://stackexchange.github.io/StackExchange.Redis/Streams.html)
+* [Microsoft Authentication Library](https://learn.microsoft.com/en-us/azure/active-directory/develop/msal-overview)
 
 
 ### Related Technology Links
