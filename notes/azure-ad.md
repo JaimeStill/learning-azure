@@ -31,3 +31,79 @@ Consider the following scenario:
 after this process of authentication, in which the user is positively identified, the web application must authorize the user's access to resources. Authorization is the process by which the web application checks whether the user is permitted to access the requested resource.
 
 This communication flow is built upon the industry-standard protocols of OAuth 2.0 and OpenID Connect.
+
+## OAuth 2.0
+
+OAuth 2.0 is the industry-standard protocol for authorization. It provides specific authorization flows for web, desktop, and mobile applications. The specification was primarily designed to enable users to authorize an application to access data in another application.
+
+Imagine you have an application that stores contact information. You want to allow users with LinkedIn accounts to import their LinkedIn contact information into your application. With OAuth, you can enable this server-to-server communication. Users can authorize your application to access contact information, wihtout needing to share passwords between applications.
+
+OAuth works well for authorization of server-to-server communications, but it doesn't include standards or specifications for authentication. As applications continued to grow their sharing of data and account information between them, the need for a standard framework for single-sign on became evident. This led to the development of OpenID Connect.
+
+## OpenID Connect
+
+OpenID Connect is an authentication layer that's built on top of OAuth 2.0. It includes identity verification methods that are missing from OAuth 2.0. OpenID Connect gives you an access token plus an ID token, which you can send to an application to prove your identity.
+
+The ID token is a JSON Web Token (JWT) and contains information about the authenticated user. THe identity provider signs the token so that applications can verify the authentication by using the provider's public key.
+
+JSON Web Token is an open international standard that defines how applications can exchange data securely as digitally signed messages. The content of each token is not encrypted, but the message is signed with the private key of the provider. By checking the signature with the corresponding public key, applications can prove that the token is issued by the identity provider and has not been tampered with.
+
+![openid-connect-auth-flow](https://learn.microsoft.com/en-us/training/modules/secure-app-with-oidc-and-azure-ad/media/2-openid-connect-auth-flow.svg)
+
+The diagram shows how the client application, the application server, and the identity provider communicate in an OpenID Connect authentication request. The client might be a mobile app or a desktop application. In this case, it's a web browser. THe application server is usually a web server that hosts webpages or a web API. THe identity provider in the middle is Azure AD.
+
+When the web browser goes to the web application, the web server needs the user to be authenticated. It redirects the browser to Azure AD and provides its own client ID, which has been registered in Azure AD. When the user has successfully authenticated against Azure AD, the provider redirects the browser to the URI on the web server.
+
+When you implement OpenID Connect, you must obtain a client ID for your application by creating an application registration in Azure AD. You then copy the client ID into the application's configuration files. In the application registration, you also include the URI of the web application so that Azure AD can redirect the client successfully.
+
+## Microsoft Authentication Library
+
+The Microsoft Authentication Library (MSAL) can be used to provide secure access to Microsoft Graph, other Microsoft APIs, third-party web APIs, or your own web API. MSAL supports many different application architectures and platforms including .NET, JavaScript, Java, Python, Android, and iOS.
+
+MSAL gives you many ways to get tokens, with a consistent API for a number of platforms. Using MSAL provides the following benefits:
+
+* No need to directly use the OAuth libraries or code against the protocol in your application.
+* Acquires tokens on behalf of a user or on behalf of an application (when applicable to the platform).
+* Maintains a token cache and refreshes tokens for you when they are close to expire. YOu don't need to handle token expiration on your own.
+* Helps you specify which audience you want your application to sign in.
+* Helps you set up your application from configuration files.
+* Helps you troubleshoot your app by exposing actionable exceptions, logging, and telemetry.
+
+### Application Types and Scenarios
+
+Using MSAL, a token can be acquired from a number of application types: web applications, web APIs, single-page apps (JavaScript), mobile and native applications, and daemons and server-side applications. MSAL currently supports thtese platforms and frameworks:
+
+Library | Supported Platforms and Frameworks
+--------|-----------------------------------
+[MSAL for Android](https://github.com/AzureAD/microsoft-authentication-library-for-android) | Android
+[MSAL for Angular](https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/lib/msal-angular) | Single-page apps with Angular
+[MSAL for iOS and macOS](https://github.com/AzureAD/microsoft-authentication-library-for-objc) | iOS and macOS
+[MSAL Go](https://github.com/AzureAD/microsoft-authentication-library-for-go) | Windows, macOS, Linux
+[MSAL Java](https://github.com/AzureAD/microsoft-authentication-library-for-java) | Windows, macOS, Linux
+[MSAL.js](https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/lib/msal-browser) | JavaScript / TypeScript frameworks
+[MSAL.NET](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet) | .NET (Framework, Core, Xamarin, etc)
+[MSAL Node](https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/lib/msal-node) | Node.js platform
+[MSAL Python](https://github.com/AzureAD/microsoft-authentication-library-for-python) | Windows, macOS, Linux
+[MSAL React](https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/lib/msal-react) | Single-page apps with React
+
+### Authentication Flows
+
+Below are some of the different authentication flows provided by Microsoft Authentication Library (MSAL). These flows can be used in a variety of different application scenarios.
+
+Flow | Description
+-----|------------
+Authorization code | Native and web apps securely obtain tokens in the name of the user
+Client credentials | Service applications run without user interaction
+On-behalf-of | The applications calls a service/web API, which in turn calls Microsoft Graph
+Implicit | Used in browser-based applications
+Device code | Enables sign-in to a device by using another device that has a browser
+Integrated windows | Windows computers silently acquire an access token when they are domain joined
+Interactive | Mobile and desktop applications call Microsoft Graph in the name of a user
+Username/password | The application signs in a user by using their username and password
+
+### Public Client and Confidential Client Applications
+
+Security tokens can be acquired by multiple types of applications. These applications tend to be separated into the following two categories. Each is ued with different libraries and objects.
+
+* **Public client applications:** Are apps that run on devices or desktop computers or in a web browser. They're not trusted to safely keep application secrets, so they only access web APIs on behalf of the user. (They support only public client flows). Public clients can't hold configuration-time secrets, so they don't have client secrets.
+* **Confidential client applications:** Are apps that run on servers (web apps, web API apps, or even service/daemon apps). They're considered difficult to access, and for that reason capable of keeping an application secret. Confidential clients can hold configuration-time secrets. Each instance of the client has a distinct configuration (including client ID and client secret).
