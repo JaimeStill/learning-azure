@@ -22,6 +22,7 @@
         * [Manage Secrets In Your Server Apps With Azure Key Vault](./exercises/key-vault/01-manage-secrets/)
 * [Notes](./notes)
     * [Azure Kubernetes Services](./notes/aks.md)
+    * [Azure Active Directory](./notes/azure-ad.md)
     * [Azure App Service](./notes/azure-app-service.md)
     * [Azure CLI](./notes/azure-cli.md)
     * [Codespaces](./notes/codespaces.md)
