@@ -31,5 +31,3 @@ Consider the following scenario:
 after this process of authentication, in which the user is positively identified, the web application must authorize the user's access to resources. Authorization is the process by which the web application checks whether the user is permitted to access the requested resource.
 
 This communication flow is built upon the industry-standard protocols of OAuth 2.0 and OpenID Connect.
-
-change
