@@ -1,4 +1,4 @@
-# Microsoft Identity Platform
+# Microsoft Authentication Library
 
 * [Implement Authentication by using the Microsoft Authentication Library](https://learn.microsoft.com/en-us/training/modules/implement-authentication-by-using-microsoft-authentication-library/)
 * [Quickstart: Register an Application with the Microsoft Idenitty Platform](https://learn.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app)
