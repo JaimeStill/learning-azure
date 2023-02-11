@@ -1,8 +1,8 @@
-# Microsoft Identity Platform
+# Microsoft Authentication Library
 
 ## Tutorials
 
-*[Scenario: Protected Web API](https://learn.microsoft.com/en-us/azure/active-directory/develop/scenario-protected-web-api-overview)
+* [Scenario: Protected Web API](https://learn.microsoft.com/en-us/azure/active-directory/develop/scenario-protected-web-api-overview)
 * [JavaScript Sign In](https://learn.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-javascript-auth-code)
 * [Node.js Sign In](https://learn.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-nodejs-webapp-msal)
 * [Angular Sign In](https://learn.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-angular-auth-code)

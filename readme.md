@@ -4,6 +4,9 @@
     * [App Service](./exercises/app-service/)
         * [Azure App Service](./exercises/app-service/01-azure-app-service/)
         * [Deploy and Run a Containerized Web App with Azure App Service](./exercises/app-service/02-app-service-containerized/)
+    * [Azure Active Directory](./exercises/azure-ad/)
+        * [Implement Interactive Authentication by Using MSAL.NET](./exercises/azure-ad/01-msal-interactive-auth/)
+        * [Microsoft Identity Platform](./exercises/)
     * [Docker](./exercises/docker/)
         * [Build a Containerized Web App with Docker](./exercises/docker/01-containerized-docker-app/)
         * [Azure Container Instances](./exercises/docker/02-azure-container-instances/)
@@ -71,6 +74,7 @@
     * [StackExchange.Redis](https://stackexchange.github.io/StackExchange.Redis/)
         * [Pub/Sub](https://stackexchange.github.io/StackExchange.Redis/PubSubOrder.html)
         * [Streams](https://stackexchange.github.io/StackExchange.Redis/Streams.html)
+* [Microsoft Identity Platform Documentation](https://learn.microsoft.com/en-us/azure/active-directory/develop/)
 * [Microsoft Authentication Library](https://learn.microsoft.com/en-us/azure/active-directory/develop/msal-overview)
 
 
