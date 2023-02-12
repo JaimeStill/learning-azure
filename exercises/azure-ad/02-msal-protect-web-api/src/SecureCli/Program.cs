@@ -2,7 +2,7 @@
 using System.Net.Http;
 using Microsoft.Identity.Client;
 
-const string clientId = "c81019f5-1e0a-4ddb-998d-547af35f0f04";
+const string clientId = "75f259e6-485b-4ce0-afcd-dd654f235ae2";
 const string tenantId = "common";
 string[] scopes = { $"api://{clientId}/access_as_user"};
 
