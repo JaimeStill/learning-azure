@@ -24,6 +24,8 @@
     * [Azure Kubernetes Services](./notes/aks.md)
     * [Azure App Service](./notes/azure-app-service.md)
     * [Azure CLI](./notes/azure-cli.md)
+    * [Azure Queue Storage](./notes/azure-queue-storage.md)
+    * [Azure Service Bus](./notes/azure-service-bus.md)
     * [Codespaces](./notes/codespaces.md)
     * [Docker](./notes/docker.md)
     * [eShop Containers Architecture](./notes/eshop-containers-architecture.md)
