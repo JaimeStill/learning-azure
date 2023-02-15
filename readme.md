@@ -8,6 +8,7 @@
         * [Implement Interactive Authentication by Using MSAL.NET](./exercises/azure-ad/01-msal-interactive-auth/)
         * [Protect Web API](./exercises/azure-ad/02-msal-protect-web-api/)
         * [SPA Auth](./exercises/azure-ad/03-spa/)
+        * [Spa to API Auth](./exercises/azure-ad/04-spa-to-api/)
     * [Docker](./exercises/docker/)
         * [Build a Containerized Web App with Docker](./exercises/docker/01-containerized-docker-app/)
         * [Azure Container Instances](./exercises/docker/02-azure-container-instances/)
