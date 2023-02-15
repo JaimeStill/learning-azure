@@ -20,7 +20,7 @@ az rest \
     --uri https://graph.microsoft.com/v1.0/applications/$objectid/
 ```
 
-## Create an Configure an Azure AD App Registration
+## Create and Configure an Azure AD App Registration
 
 1. Create the app registration and store the `appId` in a Bash variable:
 
