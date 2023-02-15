@@ -6,6 +6,7 @@
 * [JavaScript Sign In](https://learn.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-javascript-auth-code)
 * [Node.js Sign In](https://learn.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-nodejs-webapp-msal)
 * [Angular Sign In](https://learn.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-angular-auth-code)
+* [Scenario: SPA that signs in users and calls web API](https://learn.microsoft.com/en-us/azure/active-directory/develop/scenario-spa-overview)
 
 ## Misc
 

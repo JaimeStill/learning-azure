@@ -69,6 +69,18 @@ MSAL gives you many ways to get tokens, with a consistent API for a number of pl
 * Helps you set up your application from configuration files.
 * Helps you troubleshoot your app by exposing actionable exceptions, logging, and telemetry.
 
+## Scopes and the Application ID URI
+
+Scopes usually have the form `resourceURI/scopeName`. For Microsoft Graph, the scopes have shortcuts. For example, `User.Read` is a shortcut for `https://graph.microsoft.com/user.read`.
+
+During app registration, define these parameters:
+
+* The resource URI
+* One or more scopes
+* One or more app roles
+
+By default, the application registration portal recommends that you use the resource URI `api://{clientId}`.
+
 ### Application Types and Scenarios
 
 Using MSAL, a token can be acquired from a number of application types: web applications, web APIs, single-page apps (JavaScript), mobile and native applications, and daemons and server-side applications. MSAL currently supports thtese platforms and frameworks:
