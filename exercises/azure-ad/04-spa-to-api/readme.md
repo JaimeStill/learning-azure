@@ -5,14 +5,14 @@ https://github.com/Azure-Samples/ms-identity-javascript-angular-tutorial/tree/ma
 ## Create and Configure API App Registration
 
 ```bash
-appId=$(az ad app create \
+apiAppId=$(az ad app create \
     --display-name stack-api \
     --sign-in-audience AzureADMyOrg \
     --query appId \
     --output tsv)
 
-objectId=$(az ad app show \
-    --id $appId \
+apiObjectId=$(az ad app show \
+    --id $apiAppId \
     --query id \
     --output tsv)
 
@@ -34,36 +34,147 @@ read=$(echo '{
     "value": "TodoList.Read"
 }')
 
-readwriteId=$(uuidgen)
+readWriteId=$(uuidgen)
 
-readwrite=$(echo '{
+readWrite=$(echo '{
     "adminConsentDescription": "Allow the API to read and write signed-in users Todolist items.",
     "adminConsentDisplayName": "Read and Write Todolist items.",
-    "id": "'$readwriteId'",
+    "id": "'$readWriteId'",
     "isEnabled": true,
     "type": "User",
     "userConsentDescription": "Allow the API to read and write Todolist items on your behalf.",
     "userConsentDisplayName": "Read and Write Todolist items as yourself.",
     "value": "TodoList.ReadWrite"
 }')
-```
 
-```bash
-api=$(echo '{
-    "acceptMappedClaims": null,
-    "knownClientApplications": [],
+api=$(echo '"api": {
     "oauth2PermissionScopes": [
         '$read',
-        '$readwrite'
+        '$readWrite'
+    ]
+}')
+
+# App Roles
+
+appReadId=$(uuidgen)
+
+appRead=$(echo '{
+    "allowedMemberTypes": [
+        "Application"
     ],
-    "preAuthorizedApplications": [],
-    "requestedAccessTokenVersion": 2
+    "description": "Allow this application to read every users Todo list items.",
+    "displayName": "TodoList.Read.All",
+    "id": "'$appReadId'",
+    "isEnabled": true,
+    "origin": "Application",
+    "value": "TodoList.Read.All"
+}')
+
+appReadWriteId=$(uuidgen)
+
+appReadWrite=$(echo '{
+    "allowedMemberTypes": [
+        "Application"
+    ],
+    "description": "Allow this application to read and write every users Todo list items.",
+    "displayName": "TodoList.ReadWrite.All",
+    "id": "'$appReadWriteId'",
+    "isEnabled": true,
+    "origin": "Application",
+    "value": "TodoList.ReadWrite.All"
+}')
+
+appRoles=$(echo '"appRoles": [
+    '$appRead',
+    '$appReadWrite'
+]')
+
+# Identifier URI
+
+identifierUris=$(echo '"identifierUris": [
+    "api://'$apiAppId'"
+]')
+
+# Optional Claims
+
+optionalClaims=$(echo '"optionalClaims": {
+    "accessToken": [
+        {
+            "additionalProperties": [],
+            "essential": false,
+            "name": "idtyp",
+            "source": null
+        }
+    ]
+}')
+
+# Compose Body
+
+body=$(echo '{
+    '$api',
+    '$appRoles',
+    '$identifierUris',
+    '$optionalClaims'
 }' | jq .)
+
+az rest \
+    --method PATCH \
+    --uri https://graph.microsoft.com/v1.0/applications/$apiObjectId/ \
+    --headers 'Content-Type=application/json' \
+    --body "$body"
 ```
 
+## Register and Configure SPA App Registration
+
 ```bash
-az ad app update \
-    --id $appId \
-    --identifier-uris api://$appId \
-    --set api="$api"
+spaAppId=$(az ad app create \
+    --display-name stack-spa \
+    --sign-in-audience AzureADMyOrg \
+    --query appId \
+    --output tsv)
+
+spaObjectId=$(az ad app show \
+    --id $spaAppId \
+    --query id \
+    --output tsv)
+
+# API Permissions
+
+requiredResourceAccess=$(echo '"requiredResourceAccess": [
+    {
+        "resourceAccess": [
+            {
+                "id": "'$appReadId'",
+                "type": "Scope"
+            },
+            {
+                "id": "'$appReadWriteId'",
+                "type": "Scope"
+            }
+        ],
+        "resourceAppId": "'$apiAppId'"
+    }
+]')
+
+# Redirect URIs
+
+spa=$(echo '"spa": {
+    "redirectUris": [
+        "http://localhost:4200/",
+        "http://localhost:4200/auth"
+    ]
+}')
+
+# Compose Body
+
+body=$(echo '{
+    '$requiredResourceAccess',
+    '$spa'
+}' | jq .)
+
+az rest \
+    --method PATCH \
+    --uri https://graph.microsoft.com/v1.0/applications/$spaObjectId/ \
+    --headers 'Content-Type=application/json' \
+    --body "$body"
 ```
