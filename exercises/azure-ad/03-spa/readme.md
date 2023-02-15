@@ -2,6 +2,8 @@
 
 https://learn.microsoft.com/en-us/azure/active-directory/develop/tutorial-v2-angular-auth-code
 
+[ng-auth.webm](https://user-images.githubusercontent.com/14102723/218915009-7c0ddd91-3546-4783-bfd6-ba22d6f19ab6.webm)
+
 # spa-auth
 Workout SPA access to an Azure AD restricted API
 
@@ -49,9 +51,6 @@ az rest \
     --uri https://graph.microsoft.com/v1.0/applications/$objectId/ \
     --headers 'Content-Type=application/json' \
     --body '{"spa":{"redirectUris":["http://localhost:4200"]}}'
-
-# if uuidgen is not available
-sudo apt install uuid-runtime
 
 az ad app update \
     --id $appId \
