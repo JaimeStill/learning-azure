@@ -52,9 +52,6 @@ az rest \
     --headers 'Content-Type=application/json' \
     --body '{"spa":{"redirectUris":["http://localhost:4200"]}}'
 
-# if uuidgen is not available
-sudo apt install uuid-runtime
-
 az ad app update \
     --id $appId \
     --identifier-uris api://$appId

@@ -36,6 +36,9 @@ az rest \
 2. Create a `uuid` and store it as a Bash variable:
 
     ```bash
+    # if uuidgen is not available
+    sudo apt install uuid-runtime
+
     uuid=$(uuidgen)
     ```
 
