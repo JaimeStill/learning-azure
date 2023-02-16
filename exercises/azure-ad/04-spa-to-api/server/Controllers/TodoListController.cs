@@ -47,7 +47,7 @@ public class TodoListController : ControllerBase
 
     [HttpPut("{id}")]
     [RequiredScopeOrAppPermission(
-        RequredScopesConfigurationKey = "AzureAD:Scopes:Write",
+        RequiredScopesConfigurationKey = "AzureAD:Scopes:Write",
         RequiredAppPermissionsConfigurationKey = "AzureAD:AppPermissions:Write"
     )]
     public async Task<IActionResult> PutTodoItem(int id, TodoItem todoItem)
@@ -70,14 +70,14 @@ public class TodoListController : ControllerBase
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!context.TodoItems.Any(e => e.Id == id))
-                        return NotFound()
+                        return NotFound();
                     else
                         throw;
                 }
             }
-
-            return NoContent();
         }
+
+        return NoContent();
     }
 
     [HttpPost]
