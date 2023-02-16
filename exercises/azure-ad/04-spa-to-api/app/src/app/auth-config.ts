@@ -10,7 +10,7 @@ const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1
 export const msalConfig: Configuration = {
     auth: {
         clientId: '11e01888-a357-4f91-a1be-35105c4c507e', // SPA App ID
-        authority: 'https://login.microsoft.com/11e01888-a357-4f91-a1be-35105c4c507e', // AZ Tenant ID
+        authority: 'https://login.microsoft.com/64819121-d17e-4216-a81e-fa8528635fb8', // AZ Tenant ID
         redirectUri: '/auth',
         postLogoutRedirectUri: '/',
         clientCapabilities: ['CP1'] // client can handle claim challenges
@@ -21,7 +21,7 @@ export const msalConfig: Configuration = {
     },
     system: {
         loggerOptions: {
-            loggerCallback(logLevel: LogLevel, message: string) {
+            loggerCallback(_: LogLevel, message: string) {
                 console.log(message);
             },
             logLevel: LogLevel.Verbose,
