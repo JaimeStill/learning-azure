@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Logging;
+using TodoListAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,9 +10,9 @@ builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(options =>
     {
-        Configuration.Bind("AzureAd", options);
+        builder.Configuration.Bind("AzureAd", options);
         options.Events = new JwtBearerEvents();
-    }, options => { Configuration.Bind("AzureAd", options); });
+    }, options => { builder.Configuration.Bind("AzureAd", options); });
 
 IdentityModelEventSource.ShowPII = false;
 

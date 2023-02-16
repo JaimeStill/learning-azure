@@ -178,3 +178,67 @@ az rest \
     --headers 'Content-Type=application/json' \
     --body "$body"
 ```
+
+## API Initialization
+
+```bash
+dotnet new webapi -o server/ -n StackApi
+
+dotnet add package Microsoft.AspNetCore.OpenApi
+dotnet add package Microsoft.EntityFrameworkCore
+dotnet add package Microsoft.EntityFrameworkCore.InMemory
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+dotnet add package Microsoft.EntityFrameworkCore.Tools
+dotnet add package Microsoft.Identity.Web
+```
+
+Delete:
+
+* `WeatherForecastController.cs`
+* `WeatherForecast.cs`
+
+File configuration:
+
+* [`appsettings.json`](./server/appsettings.json)
+* [`launchSettings.json`](./server/Properties/launchSettings.json)
+* [`TodoItem.cs`](./server/Models/TodoItem.cs)
+* [`TodoContext.cs`](./server/Models/TodoContext.cs)
+* [`TodoListController.cs`](./server/Controllers/TodoListController.cs)
+* [`Program.cs`](./server/Program.cs)
+
+## SPA Initialization
+
+```bash
+ng new stack-spa \
+    --directory=app/ \
+    --routing=true \
+    --style=css \
+    --strict=false \
+    --skip-git \
+    --minimal
+
+cd app/
+
+npm i @angular/cdk \
+    @angular/material \
+    @azure/msal-angular \
+    @azure/msal-browser
+
+ng generate component home
+ng generate component todo-edit
+ng generate component todo-view
+```
+
+File configuration:
+
+* [`angular.json`](./app/angular.json)
+* [`index.html`](./app/src/index.html)
+* [`styles.css`](./app/src/styles.css)    
+* [`auth-config.ts`](./app/src/app/auth-config.ts)
+* [`todo.ts`](./app/src/app/todo.ts)
+* [`todo.service.ts`](./app/src/app/todo.service.ts)
+* [`app.module.ts`](./app/src/app/app.module.ts)
+* [`app.component.ts`](./app/src/app/app.component.ts)
+* [`app.component.html`](./app/src/app/app.component.html)
+* [`app.component.css`](./app/src/app/app.component.css)
+* [`app-routing.module.ts`](./app/src/app/app-routing.module.ts)
